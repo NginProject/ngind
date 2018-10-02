@@ -67,7 +67,7 @@ type Whisper struct {
 	keys map[string]*ecdsa.PrivateKey
 
 	messages    map[common.Hash]*Envelope // Pool of messages currently tracked by this node
-	expirations map[uint32]set.Interface  // Message expiration pool (TODO: something lighter)
+	expirations map[uint32]*set.SetNonTS  // Message expiration pool (TODO: something lighter)
 	poolMu      sync.RWMutex              // Mutex to sync the message and expiration pools
 
 	peers  map[*peer]struct{} // Set of currently active peers
@@ -83,7 +83,7 @@ func New() *Whisper {
 		filters:     filter.New(),
 		keys:        make(map[string]*ecdsa.PrivateKey),
 		messages:    make(map[common.Hash]*Envelope),
-		expirations: make(map[uint32]set.Interface),
+		expirations: make(map[uint32]*set.SetNonTS),
 		peers:       make(map[*peer]struct{}),
 		quit:        make(chan struct{}),
 	}
@@ -269,7 +269,7 @@ func (self *Whisper) add(envelope *Envelope) error {
 
 	// Insert the message into the expiration pool for later removal
 	if self.expirations[envelope.Expiry] == nil {
-		self.expirations[envelope.Expiry] = set.New(set.NonThreadSafe)
+		self.expirations[envelope.Expiry] = set.NewNonTS()
 	}
 	if !self.expirations[envelope.Expiry].Has(hash) {
 		self.expirations[envelope.Expiry].Add(hash)

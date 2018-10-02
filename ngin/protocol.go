@@ -29,21 +29,21 @@ import (
 
 // Constants to match up protocol versions and messages
 const (
-	ng01 = 1
-	ng02 = 2 // TODO:Upgrade
+	ng62 = 62
+	ng63 = 63 // TODO:Upgrade
 )
 
 // Official short name of the protocol used during capability negotiation.
 var ProtocolName = "ngin"
 
 // Supported versions of the ngin protocol (first is primary).
-var ProtocolVersions = []uint{ng01, ng02} // TODO:Upgrade
+var ProtocolVersions = []uint{ng62, ng63} // TODO:Upgrade
 
 // Number of implemented message corresponding to different protocol versions.
 var ProtocolLengths = []uint64{17, 8}
 
 const (
-	NetworkId          = 0
+	NetworkId          = 52520
 	ProtocolMaxMsgSize = 10 * 1024 * 1024 // Maximum cap on the size of a protocol message
 )
 

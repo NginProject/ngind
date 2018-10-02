@@ -18,6 +18,7 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 	"math/big"
 
@@ -30,10 +31,16 @@ import (
 )
 
 var (
+	OneTenthMaximumBlockReward= big.NewInt(1e+18)
+	MaximumBlockReward       =  OneTenthMaximumBlockReward.Mul(OneTenthMaximumBlockReward, big.NewInt(10)) // that's shiny 10 ngin
+	big8                     = big.NewInt(8)
 	big32                    = big.NewInt(32)
-	DisinflationRateQuotient = big.NewInt(249)
-	DisinflationRateDivisor  = big.NewInt(250)
+	DisinflationRateQuotient = big.NewInt(4)
+	DisinflationRateDivisor  = big.NewInt(5)
+
+	ErrConfiguration = errors.New("invalid configuration")
 )
+
 
 // StateProcessor is a basic Processor, which takes care of transitioning
 // state from one point to another.
@@ -80,7 +87,7 @@ func (p *StateProcessor) Process(block *types.Block, statedb *state.StateDB) (ty
 			}
 		}
 		statedb.StartRecord(tx.Hash(), block.Hash(), i)
-		if !UseSputnikVM {
+		if UseSputnikVM != true {
 			receipt, logs, _, err := ApplyTransaction(p.config, p.bc, gp, statedb, header, tx, totalUsedGas)
 			if err != nil {
 				return nil, nil, totalUsedGas, err
@@ -109,7 +116,7 @@ func (p *StateProcessor) Process(block *types.Block, statedb *state.StateDB) (ty
 func ApplyTransaction(config *ChainConfig, bc *BlockChain, gp *GasPool, statedb *state.StateDB, header *types.Header, tx *types.Transaction, usedGas *big.Int) (*types.Receipt, vm.Logs, *big.Int, error) {
 	tx.SetSigner(config.GetSigner(header.Number))
 
-	_, gas, err := ApplyMessage(NewEnv(statedb, config, bc, tx, header), tx, gp)
+	_, gas, failed, err := ApplyMessage(NewEnv(statedb, config, bc, tx, header), tx, gp)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -127,6 +134,11 @@ func ApplyTransaction(config *ChainConfig, bc *BlockChain, gp *GasPool, statedb 
 	logs := statedb.GetLogs(tx.Hash())
 	receipt.Logs = logs
 	receipt.Bloom = types.CreateBloom(types.Receipts{receipt})
+	if failed {
+		receipt.Status = types.TxFailure
+	} else {
+		receipt.Status = types.TxSuccess
+	}
 
 	glog.V(logger.Debug).Infoln(receipt)
 
@@ -188,8 +200,6 @@ func GetBlockWinnerRewardForUnclesByEra(era *big.Int, uncles []*types.Header) *b
 // GetRewardByEra gets a block reward at disinflation rate.
 // Constants MaxBlockReward, DisinflationRateQuotient, and DisinflationRateDivisor assumed.
 func GetBlockWinnerRewardByEra(era *big.Int) *big.Int {
-	MaximumBlockReward := big.NewInt(1e+18)                    // 1 NG
-	MaximumBlockReward.Mul(MaximumBlockReward, big.NewInt(10)) // 10 NG
 
 	if era.Cmp(big.NewInt(0)) == 0 {
 		return new(big.Int).Set(MaximumBlockReward)

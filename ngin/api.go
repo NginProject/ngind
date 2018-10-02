@@ -214,7 +214,7 @@ func (s *PublicMinerAPI) SubmitWork(nonce rpc.HexNumber, solution common.Hash) b
 // result[2], 32 bytes hex encoded boundary condition ("target"), 2^256/difficulty
 func (s *PublicMinerAPI) GetWork() (work [3]string, err error) {
 	if !s.e.IsMining() {
-		if err := s.e.StartMining(0); err != nil {
+		if err := s.e.StartMining(0, ""); err != nil {
 			return work, err
 		}
 	}
@@ -251,7 +251,7 @@ func (s *PrivateMinerAPI) Start(threads *rpc.HexNumber) (bool, error) {
 		threads = rpc.NewHexNumber(runtime.NumCPU())
 	}
 
-	err := s.e.StartMining(threads.Int())
+	err := s.e.StartMining(threads.Int(), "")
 	if err == nil {
 		return true, nil
 	}
@@ -1687,7 +1687,7 @@ func (api *PublicNginAPI) GetAddressTransactions(address common.Address, blockSt
 	if atxi == nil {
 		return nil, errors.New("addr-tx indexing not enabled")
 	}
-	// Use human-friendly abbreviations, per https://github.com/ethereumproject/go-ethereum/pull/475#issuecomment-366065122
+	// Use human-friendly abbreviations, per https://github.com/NginProject/ngind/pull/475#issuecomment-366065122
 	// so 't' => to, 'f' => from, 'tf|ft' => either/both. Same pattern for txKindOf.
 	// _t_o OR _f_rom
 	if toOrFrom == "tf" || toOrFrom == "ft" {
@@ -1836,7 +1836,7 @@ func (api *PublicDebugAPI) SetHead(number uint64) (bool, error) {
 }
 
 // Metrics return all available registered metrics for the client.
-// See https://github.com/ethereumproject/go-ethereum/wiki/Metrics-and-Monitoring for prophetic documentation.
+// See https://github.com/NginProject/ngind/wiki/Metrics-and-Monitoring for prophetic documentation.
 func (api *PublicDebugAPI) Metrics(raw bool) (map[string]interface{}, error) {
 
 	// Create a rate formatter
@@ -1992,7 +1992,7 @@ func (s *PublicBlockChainAPI) TraceCall(args CallArgs, blockNr rpc.BlockNumber) 
 	vmenv := core.NewEnv(stateDb, s.config, s.bc, msg, block.Header())
 	gp := new(core.GasPool).AddGas(common.MaxBig)
 
-	ret, gas, err := core.ApplyMessage(vmenv, msg, gp)
+	ret, gas, _, err := core.ApplyMessage(vmenv, msg, gp)
 	return &ExecutionResult{
 		Gas:         gas,
 		ReturnValue: fmt.Sprintf("%x", ret),
@@ -2013,7 +2013,7 @@ func (s *PublicDebugAPI) TraceTransaction(txHash common.Hash) (*ExecutionResult,
 	}
 
 	gp := new(core.GasPool).AddGas(tx.Gas())
-	ret, gas, err := core.ApplyMessage(vmenv, msg, gp)
+	ret, gas, _, err := core.ApplyMessage(vmenv, msg, gp)
 	return &ExecutionResult{
 		Gas:         gas,
 		ReturnValue: fmt.Sprintf("%x", ret),
@@ -2068,7 +2068,7 @@ func (s *PublicDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (core.
 		}
 
 		gp := new(core.GasPool).AddGas(tx.Gas())
-		_, _, err := core.ApplyMessage(vmenv, msg, gp)
+		_, _, _, err := core.ApplyMessage(vmenv, msg, gp)
 		if err != nil {
 			return nil, nil, fmt.Errorf("tx %x failed: %v", tx.Hash(), err)
 		}

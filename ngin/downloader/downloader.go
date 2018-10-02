@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with Ngin. If not, see <http://www.gnu.org/licenses/>.
+// along with Ngin. If not, see <http://www.gnu.org/licenses/>.
 
 // Package downloader contains the manual full chain synchronisation.
 package downloader
@@ -1581,8 +1582,8 @@ func (d *Downloader) commitFastSyncData(results []*fetchResult, stateSync *state
 	// Retrieve the a batch of results to import
 	first, last := results[0].Header, results[len(results)-1].Header
 	glog.V(logger.Debug).Infoln("Inserting fast-sync blocks", "items", len(results),
-		"firstnum", first.Number, "firsthash", first.Hash(),
-		"lastnumn", last.Number, "lasthash", last.Hash(),
+		"firstnum", first.Number, "firsthash", first.Hash().Hex(),
+		"lastnumn", last.Number, "lasthash", last.Hash().Hex(),
 	)
 	blocks := make([]*types.Block, len(results))
 	receipts := make([]types.Receipts, len(results))

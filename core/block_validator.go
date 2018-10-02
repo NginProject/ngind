@@ -33,7 +33,7 @@ import (
 var (
 	DurationLimit          = big.NewInt(13) // The decision boundary on the blocktime duration used to determine whether difficulty should go up or not.
 	ExpDiffPeriod          = big.NewInt(100000)
-	MinimumDifficulty      = big.NewInt(10000)
+	MinimumDifficulty      = big.NewInt(100000)
 	MinGasLimit            = big.NewInt(5000)    // Minimum the gas limit may ever be.
 	TargetGasLimit         = big.NewInt(4712388) // The artificial target
 	DifficultyBoundDivisor = big.NewInt(200)     // The bound divisor of the difficulty, used in the update calculations.
@@ -159,7 +159,7 @@ func (v *BlockValidator) VerifyUncles(block, parent *types.Block) error {
 		return validateError(fmt.Sprintf("Block can only contain maximum 2 uncles (contained %d)", len(block.Uncles())))
 	}
 
-	uncles := set.New(set.ThreadSafe)
+	uncles := set.New()
 	ancestors := make(map[common.Hash]*types.Block)
 	for _, ancestor := range v.bc.GetBlocksFromHash(block.ParentHash(), 7) {
 		ancestors[ancestor.Hash()] = ancestor

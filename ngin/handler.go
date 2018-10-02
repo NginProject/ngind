@@ -126,7 +126,7 @@ func NewProtocolManager(config *core.ChainConfig, mode downloader.SyncMode, netw
 	manager.SubProtocols = make([]p2p.Protocol, 0, len(ProtocolVersions))
 	for i, version := range ProtocolVersions {
 		// Skip protocol version if incompatible with the mode of operation
-		if mode == downloader.FastSync && version < ng02 {
+		if mode == downloader.FastSync && version < ng63 {
 			continue
 		}
 		// Compatible; initialise the sub-protocol
@@ -373,7 +373,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 		mlogWireDelegate(p, "receive", StatusMsg, intSize, nil, err)
 		return
 	// Block header query, collect the requested headers and reply
-	case p.version >= ng01 && msg.Code == GetBlockHeadersMsg:
+	case p.version >= ng62 && msg.Code == GetBlockHeadersMsg:
 		// Decode the complex header query
 		var query getBlockHeadersData
 		if e := msg.Decode(&query); e != nil {
@@ -452,7 +452,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 		}
 		return p.SendBlockHeaders(headers)
 
-	case p.version >= ng01 && msg.Code == BlockHeadersMsg:
+	case p.version >= ng62 && msg.Code == BlockHeadersMsg:
 		// A batch of headers arrived to one of our previous requests
 		var headers []*types.Header
 		if e := msg.Decode(&headers); e != nil {
@@ -495,7 +495,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 			}
 		}
 
-	case p.version >= ng01 && msg.Code == GetBlockBodiesMsg:
+	case p.version >= ng62 && msg.Code == GetBlockBodiesMsg:
 		// Decode the retrieval message
 		msgStream := rlp.NewStream(msg.Payload, uint64(msg.Size))
 		if _, err = msgStream.List(); err != nil {
@@ -525,7 +525,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 		mlogWireDelegate(p, "receive", GetBlockBodiesMsg, intSize, bodies, err)
 		return p.SendBlockBodiesRLP(bodies)
 
-	case p.version >= ng01 && msg.Code == BlockBodiesMsg:
+	case p.version >= ng62 && msg.Code == BlockBodiesMsg:
 		// A batch of block bodies arrived to one of our previous requests
 		var request blockBodiesData
 		// Deliver them all to the downloader for queuing
@@ -554,7 +554,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 			}
 		}
 
-	case p.version >= ng02 && msg.Code == GetNodeDataMsg:
+	case p.version >= ng63 && msg.Code == GetNodeDataMsg:
 		// Decode the retrieval message
 		msgStream := rlp.NewStream(msg.Payload, uint64(msg.Size))
 		if _, err = msgStream.List(); err != nil {
@@ -585,7 +585,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 		mlogWireDelegate(p, "receive", GetNodeDataMsg, intSize, data, err)
 		return p.SendNodeData(data)
 
-	case p.version >= ng02 && msg.Code == NodeDataMsg:
+	case p.version >= ng63 && msg.Code == NodeDataMsg:
 		// A batch of node state data arrived to one of our previous requests
 		var data [][]byte
 
@@ -600,7 +600,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 			glog.V(logger.Core).Warnf("failed to deliver node state data: %v", e)
 		}
 
-	case p.version >= ng02 && msg.Code == GetReceiptsMsg:
+	case p.version >= ng63 && msg.Code == GetReceiptsMsg:
 		// Decode the retrieval message
 		msgStream := rlp.NewStream(msg.Payload, uint64(msg.Size))
 		if _, err = msgStream.List(); err != nil {
@@ -640,7 +640,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 		mlogWireDelegate(p, "receive", GetReceiptsMsg, intSize, receipts, err)
 		return p.SendReceiptsRLP(receipts)
 
-	case p.version >= ng02 && msg.Code == ReceiptsMsg:
+	case p.version >= ng63 && msg.Code == ReceiptsMsg:
 		// A batch of receipts arrived to one of our previous requests
 		var receipts [][]*types.Receipt
 		if err := msg.Decode(&receipts); err != nil {
@@ -657,7 +657,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) (err error) {
 		// Retrieve and deserialize the remote new block hashes notification
 		var announces newBlockHashesData // = []announce{}
 
-		if p.version < ng01 {
+		if p.version < ng62 {
 			// We're running the old protocol, make block number unknown (0)
 			var hashes []common.Hash
 			if e := msg.Decode(&hashes); e != nil {

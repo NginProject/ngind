@@ -24,7 +24,6 @@ require (
 	github.com/microsoft/go-winio v0.4.11
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/nsf/termbox-go v0.0.0-20180819125858-b66b20ab708e // indirect
-	github.com/omeid/go-resources v0.0.0-20171025031226-ca9993b7d1a4 // indirect
 	github.com/onsi/ginkgo v1.6.0 // indirect
 	github.com/onsi/gomega v1.4.1 // indirect
 	github.com/peterh/liner v1.1.0
@@ -38,12 +37,11 @@ require (
 	github.com/syndtr/goleveldb v0.0.0-20180815032940-ae2bd5eed72d
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d
-	golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f // indirect
 	golang.org/x/sys v0.0.0-20180906133057-8cf3aee42992 // indirect
 	golang.org/x/text v0.3.0 // indirect
 	golang.org/x/tools v0.0.0-20180904205237-0aa4b8830f48
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
-	gopkg.in/fatih/set.v0 v0.2.1
+	gopkg.in/fatih/set.v0 v0.1.0
 	gopkg.in/fsnotify.v1 v1.4.7 // indirect
 	gopkg.in/karalabe/cookiejar.v2 v2.0.0-20150724131613-8dcd6a7f4951
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect

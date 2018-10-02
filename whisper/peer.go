@@ -35,7 +35,7 @@ type peer struct {
 	peer *p2p.Peer
 	ws   p2p.MsgReadWriter
 
-	known set.Interface // Messages already known by the peer to avoid wasting bandwidth
+	known *set.Set // Messages already known by the peer to avoid wasting bandwidth
 
 	quit chan struct{}
 }
@@ -46,7 +46,7 @@ func newPeer(host *Whisper, remote *p2p.Peer, rw p2p.MsgReadWriter) *peer {
 		host:  host,
 		peer:  remote,
 		ws:    rw,
-		known: set.New(set.ThreadSafe),
+		known: set.New(),
 		quit:  make(chan struct{}),
 	}
 }
@@ -137,7 +137,7 @@ func (self *peer) marked(envelope *Envelope) bool {
 // expired (unknown) ones from the known list.
 func (self *peer) expire() {
 	// Assemble the list of available envelopes
-	available := set.New(set.NonThreadSafe)
+	available := set.New()
 	for _, envelope := range self.host.envelopes() {
 		available.Add(envelope.Hash())
 	}

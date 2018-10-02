@@ -136,9 +136,9 @@ func (p *peer) Reset() {
 // FetchHeaders sends a header retrieval request to the remote peer.
 func (p *peer) FetchHeaders(from uint64, count int) error {
 	// Sanity check the protocol version
-	if p.version < 62 {
-		panic(fmt.Sprintf("header fetch [ngin/62+] requested on ngin/%d", p.version))
-	}
+	//if p.version < 62 {
+	//	panic(fmt.Sprintf("header fetch [ngin/62+] requested on ngin/%d", p.version))
+	//}
 	// Short circuit if the peer is already fetching
 	if !atomic.CompareAndSwapInt32(&p.headerIdle, 0, 1) {
 		return errAlreadyFetching
@@ -154,10 +154,10 @@ func (p *peer) FetchHeaders(from uint64, count int) error {
 // FetchBodies sends a block body retrieval request to the remote peer.
 func (p *peer) FetchBodies(request *fetchRequest) error {
 	// Sanity check the protocol version
-	if p.version < 62 {
-		panic(fmt.Sprintf("body fetch [ngin/62+] requested on ngin/%d", p.version))
-	}
-	// Short circuit if the peer is already fetching
+	//if p.version < 62 {
+	//	panic(fmt.Sprintf("body fetch [ngin/62+] requested on ngin/%d", p.version))
+	//}
+	//Short circuit if the peer is already fetching
 	if !atomic.CompareAndSwapInt32(&p.blockIdle, 0, 1) {
 		return errAlreadyFetching
 	}

@@ -4,15 +4,15 @@
     "state": {
         "startingNonce": 0
     },
-    "network": 2,
+    "network": 52520,
     "consensus": "M00N",
     "genesis": {
-        "nonce": "0x0000000000000001",
+        "nonce": "0x0000000000000000",
         "timestamp": "",
         "parentHash": "",
         "extraData": "",
         "gasLimit": "0x03000000",
-        "difficulty": "0x0000000001",
+        "difficulty": "0x0001",
         "coinbase": "",
         "alloc": {}
     },
@@ -26,7 +26,7 @@
                     {
                         "id": "eip155",
                         "options": {
-                            "chainID": 0
+                            "chainID": 111
                         }
                     }
                 ]
@@ -36,9 +36,8 @@
         ]
     },
     "bootstrap": [
-        "enode://d9199f3a8bf0c81d1f3167a8279e1e32dcc4a728bf6c24577370cb165cd6855df55fbae45b40b08d51be48fcd95ce8e2bd536a30394e48728237de3a56783d52@149.28.83.115:52520",
-        "enode://ef05322c3446ccec4809ca81b51c46de81a8f933a6899684147bfa00e0f6e277404d94c1988c53ef0276277b1be056301f8663eb37a53b95fc3a0ec5922dc868@192.227.232.75:52520",
-        "enode://4b6179ece8b0dd64684c2c8007aa3f28520ebc2d8966dda4499871b47739233d2ea52a26304128fb539738a26c6ea3bbcaf79b694432311ccfa199bb2034ca26@198.12.71.230:52520",
-        "enode://5d1546eb0aeabb45f53685e4cad0c72058b9b9445eb1498cfbaca892b92cc57b8f182aa47170f0915bae4bcc31c4f69b3f4d6cf36cfdf275b5cd88007b362166@119.29.57.26:52520"
+        "enode://0aa73a8cc1537233342c786920d95746a5a36788b795295e263cae735c961d26e492e5f6b3eb7b80e2e927445f19317ca7c3bd7c3525783e18c584ca705f108e@149.28.83.115:52520",
+        "enode://d1776c40a936465506ddc96011cf9b9fa3057add2122e9372ee961c5c4f43f3209047cf94a898d15e822cdf6c36aa511fb1f0150f3f1adf160242d9a10b96df4@192.227.232.75:52520",
+        "enode://f7e4783d1bc408c5b7079dec5739acdb00294765bcfc830cf6a8fb3ec3eb2de05e275e694ede7f78dc4b6d2b4fe7dea56455c9b606dc8ff4abf4a1e3456fbe94@198.12.71.230:52520"
     ]
 }

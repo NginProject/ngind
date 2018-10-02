@@ -19,18 +19,23 @@
 package ngin
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
 )
 
-func (s *Ngin) StartMining(threads int) error {
+func (s *Ngin) StartMining(threads int, gpus string) error {
 	eb, err := s.Coinbase()
 	if err != nil {
 		err = fmt.Errorf("Cannot start mining without coinbase address: %v", err)
 		glog.V(logger.Error).Infoln(err)
 		return err
+	}
+
+	if gpus != "" {
+		return errors.New("GPU mining not supported yet.")
 	}
 
 	// CPU mining

@@ -63,14 +63,14 @@ type Work struct {
 	config             *core.ChainConfig
 	signer             types.Signer
 	state              *state.StateDB // apply state changes here
-	ancestors          set.Interface       // ancestor set (used for checking uncle parent validity)
-	family             set.Interface       // family set (used for checking uncle invalidity)
-	uncles             set.Interface       // uncle set
-	remove             set.Interface       // tx which will be removed
+	ancestors          *set.Set       // ancestor set (used for checking uncle parent validity)
+	family             *set.Set       // family set (used for checking uncle invalidity)
+	uncles             *set.Set       // uncle set
+	remove             *set.Set       // tx which will be removed
 	tcount             int            // tx count in cycle
-	ignoredTransactors set.Interface
-	lowGasTransactors  set.Interface
-	ownedAccounts      set.Interface
+	ignoredTransactors *set.Set
+	lowGasTransactors  *set.Set
+	ownedAccounts      *set.Set
 	lowGasTxs          types.Transactions
 	localMinedBlocks   *uint64RingBuffer // the most recent block numbers that were mined locally (used to check block inclusion)
 
@@ -269,17 +269,17 @@ func (self *worker) wait() {
 				go self.mux.Post(core.NewMinedBlockEvent{Block: block})
 			} else {
 				work.state.CommitTo(self.chainDb, false)
-				parent := self.chain.GetBlock(block.ParentHash())
-				if parent == nil {
-					glog.V(logger.Error).Infoln("Invalid block found during mining")
-					continue
-				}
-
-				auxValidator := self.eth.BlockChain().AuxValidator()
-				if err := core.ValidateHeader(self.config, auxValidator, block.Header(), parent.Header(), true, false); err != nil && err != core.BlockFutureErr {
-					glog.V(logger.Error).Infoln("Invalid header on mined block:", err)
-					continue
-				}
+				//parent := self.chain.GetBlock(block.ParentHash())
+				//if parent == nil {
+				//	glog.V(logger.Error).Infoln("Invalid block found during mining")
+				//	continue
+				//}
+				//
+				//auxValidator := self.eth.BlockChain().AuxValidator()
+				//if err := core.ValidateHeader(self.config, auxValidator, block.Header(), parent.Header(), true, false); err != nil && err != core.BlockFutureErr {
+				//	glog.V(logger.Error).Infoln("Invalid header on mined block:", err)
+				//	continue
+				//}
 
 				stat, err := self.chain.WriteBlock(block)
 				if err != nil {
@@ -371,9 +371,9 @@ func (self *worker) makeCurrent(parent *types.Block, header *types.Header) error
 		config:    self.config,
 		signer:    types.NewChainIdSigner(self.config.GetChainID()),
 		state:     state,
-		ancestors: set.New(set.ThreadSafe),
-		family:    set.New(set.ThreadSafe),
-		uncles:    set.New(set.ThreadSafe),
+		ancestors: set.New(),
+		family:    set.New(),
+		uncles:    set.New(),
 		header:    header,
 		createdAt: time.Now(),
 	}
@@ -389,10 +389,10 @@ func (self *worker) makeCurrent(parent *types.Block, header *types.Header) error
 	accounts := self.eth.AccountManager().Accounts()
 
 	// Keep track of transactions which return errors so they can be removed
-	work.remove = set.New(set.ThreadSafe)
+	work.remove = set.New()
 	work.tcount = 0
-	work.ignoredTransactors = set.New(set.ThreadSafe)
-	work.lowGasTransactors = set.New(set.ThreadSafe)
+	work.ignoredTransactors = set.New()
+	work.lowGasTransactors = set.New()
 	work.ownedAccounts = accountAddressesSet(accounts)
 	if self.current != nil {
 		work.localMinedBlocks = self.current.localMinedBlocks
@@ -725,8 +725,8 @@ func gasprice(price *big.Int, pct int64) *big.Int {
 	return p
 }
 
-func accountAddressesSet(accounts []accounts.Account) set.Interface {
-	accountSet := set.New(set.ThreadSafe)
+func accountAddressesSet(accounts []accounts.Account) *set.Set {
+	accountSet := set.New()
 	for _, account := range accounts {
 		accountSet.Add(account.Address)
 	}

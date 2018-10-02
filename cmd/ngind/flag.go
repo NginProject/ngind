@@ -624,7 +624,7 @@ func mustMakeEthConf(ctx *cli.Context, sconf *core.SufficientChainConfig) *ngin.
 	}
 
 	switch sconf.Consensus {
-	case "cryptonight-test":
+	case "M00N-TEST":
 		ethConf.PowTest = true
 	}
 
@@ -654,7 +654,7 @@ func mustMakeSufficientChainConfig(ctx *cli.Context) *core.SufficientChainConfig
 	defer func() {
 		// Allow flags to override external config file.
 		if ctx.GlobalBool(aliasableName(DevModeFlag.Name, ctx)) {
-			config.Consensus = "cryptonight-test"
+			config.Consensus = "M00N-TEST"
 		}
 		if ctx.GlobalIsSet(aliasableName(BootnodesFlag.Name, ctx)) {
 			config.ParsedBootstrap = MakeBootstrapNodesFromContext(ctx)
@@ -681,7 +681,7 @@ func mustMakeSufficientChainConfig(ctx *cli.Context) *core.SufficientChainConfig
 		config.Identity = chainIdentity
 		config.Name = mustMakeChainConfigNameDefaulty(ctx)
 		config.Network = ngin.NetworkId // 1, default mainnet
-		config.Consensus = "cryptonight"
+		config.Consensus = "M00N"
 		config.Genesis = core.DefaultConfigMainnet.Genesis
 		config.ChainConfig = MustMakeChainConfigFromDefaults(ctx).SortForks()
 		config.ParsedBootstrap = MakeBootstrapNodesFromContext(ctx)

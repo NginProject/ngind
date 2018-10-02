@@ -17,7 +17,10 @@ import (
 
 const SputnikVMExists = true
 
-var UseSputnikVM = false
+// UseSputnikVM determines whether the VM will be Sputnik or Geth's native one.
+// Awkward though it is to use a string variable, go's -ldflags relies on it being a constant string in order to be settable via -X from the command line,
+// eg. -ldflags "-X core.UseSputnikVM=true".
+var UseSputnikVM string = "false"
 
 // Apply a transaction using the SputnikVM processor with the given
 // chain config and state. Note that we use the name of the chain
@@ -48,43 +51,42 @@ func ApplyMultiVmTransaction(config *ChainConfig, bc *BlockChain, gp *GasPool, s
 	}
 
 	currentNumber := header.Number
-	// TODO: for fork
-	//homesteadFork := config.ForkByName("Homestead")
-	//eip150Fork := config.ForkByName("GasReprice")
-	//eip160Fork := config.ForkByName("Diehard")
+	homesteadFork := config.ForkByName("Homestead")
+	eip150Fork := config.ForkByName("GasReprice")
+	eip160Fork := config.ForkByName("Diehard")
 
 	var vm *sputnikvm.VM
 	if state.StartingNonce == 0 {
-		//if eip160Fork.Block != nil && currentNumber.Cmp(eip160Fork.Block) >= 0 {
-		//	vm = sputnikvm.NewEIP160(&vmtx, &vmheader)
-		//} else if eip150Fork.Block != nil && currentNumber.Cmp(eip150Fork.Block) >= 0 {
-		//	vm = sputnikvm.NewEIP150(&vmtx, &vmheader)
-		//} else if homesteadFork.Block != nil && currentNumber.Cmp(homesteadFork.Block) >= 0 {
-		//	vm = sputnikvm.NewHomestead(&vmtx, &vmheader)
-		//} else {
+		if eip160Fork.Block != nil && currentNumber.Cmp(eip160Fork.Block) >= 0 {
+			vm = sputnikvm.NewEIP160(&vmtx, &vmheader)
+		} else if eip150Fork.Block != nil && currentNumber.Cmp(eip150Fork.Block) >= 0 {
+			vm = sputnikvm.NewEIP150(&vmtx, &vmheader)
+		} else if homesteadFork.Block != nil && currentNumber.Cmp(homesteadFork.Block) >= 0 {
+			vm = sputnikvm.NewHomestead(&vmtx, &vmheader)
+		} else {
 			vm = sputnikvm.NewFrontier(&vmtx, &vmheader)
-		//}
+		}
 	} else if state.StartingNonce == 1048576 {
-		//if eip160Fork.Block != nil && currentNumber.Cmp(eip160Fork.Block) >= 0 {
-		//	vm = sputnikvm.NewTestnetEIP160(&vmtx, &vmheader)
-		//} else if eip150Fork.Block != nil && currentNumber.Cmp(eip150Fork.Block) >= 0 {
-		//	vm = sputnikvm.NewTestnetEIP150(&vmtx, &vmheader)
-		//} else if homesteadFork.Block != nil && currentNumber.Cmp(homesteadFork.Block) >= 0 {
-		//	vm = sputnikvm.NewTestnetHomestead(&vmtx, &vmheader)
-		//} else {
-			vm = sputnikvm.NewTestnetFrontier(&vmtx, &vmheader)
-		//}
+		if eip160Fork.Block != nil && currentNumber.Cmp(eip160Fork.Block) >= 0 {
+			vm = sputnikvm.NewMordenEIP160(&vmtx, &vmheader)
+		} else if eip150Fork.Block != nil && currentNumber.Cmp(eip150Fork.Block) >= 0 {
+			vm = sputnikvm.NewMordenEIP150(&vmtx, &vmheader)
+		} else if homesteadFork.Block != nil && currentNumber.Cmp(homesteadFork.Block) >= 0 {
+			vm = sputnikvm.NewMordenHomestead(&vmtx, &vmheader)
+		} else {
+			vm = sputnikvm.NewMordenFrontier(&vmtx, &vmheader)
+		}
 	} else {
 		sputnikvm.SetCustomInitialNonce(big.NewInt(int64(state.StartingNonce)))
-		//if eip160Fork.Block != nil && currentNumber.Cmp(eip160Fork.Block) >= 0 {
-		//	vm = sputnikvm.NewCustomEIP160(&vmtx, &vmheader)
-		//} else if eip150Fork.Block != nil && currentNumber.Cmp(eip150Fork.Block) >= 0 {
-		//	vm = sputnikvm.NewCustomEIP150(&vmtx, &vmheader)
-		//} else if homesteadFork.Block != nil && currentNumber.Cmp(homesteadFork.Block) >= 0 {
-		//	vm = sputnikvm.NewCustomHomestead(&vmtx, &vmheader)
-		//} else {
+		if eip160Fork.Block != nil && currentNumber.Cmp(eip160Fork.Block) >= 0 {
+			vm = sputnikvm.NewCustomEIP160(&vmtx, &vmheader)
+		} else if eip150Fork.Block != nil && currentNumber.Cmp(eip150Fork.Block) >= 0 {
+			vm = sputnikvm.NewCustomEIP150(&vmtx, &vmheader)
+		} else if homesteadFork.Block != nil && currentNumber.Cmp(homesteadFork.Block) >= 0 {
+			vm = sputnikvm.NewCustomHomestead(&vmtx, &vmheader)
+		} else {
 			vm = sputnikvm.NewCustomFrontier(&vmtx, &vmheader)
-		//}
+		}
 	}
 
 Loop:
@@ -180,6 +182,11 @@ Loop:
 	receipt := types.NewReceipt(statedb.IntermediateRoot(false).Bytes(), totalUsedGas)
 	receipt.TxHash = tx.Hash()
 	receipt.GasUsed = new(big.Int).Set(totalUsedGas)
+	if vm.Failed() {
+		receipt.Status = types.TxFailure
+	} else {
+		receipt.Status = types.TxSuccess
+	}
 	if MessageCreatesContract(tx) {
 		receipt.ContractAddress = crypto.CreateAddress(from, tx.Nonce())
 	}

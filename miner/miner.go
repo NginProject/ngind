@@ -166,6 +166,9 @@ func (self *Miner) Mining() bool {
 
 func (self *Miner) HashRate() (tot int64) {
 	tot += self.pow.GetHashrate()
+	for agent := range self.worker.agents {
+		tot += agent.GetHashRate()
+	}
 	return
 }
 

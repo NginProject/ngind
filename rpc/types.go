@@ -23,6 +23,7 @@ import (
 	"reflect"
 	"strings"
 	"sync"
+
 	"gopkg.in/fatih/set.v0"
 )
 
@@ -74,7 +75,7 @@ type Server struct {
 
 	run      int32
 	codecsMu sync.Mutex
-	codecs   set.Interface
+	codecs   *set.Set
 }
 
 // rpcRequest represents a raw incoming RPC request

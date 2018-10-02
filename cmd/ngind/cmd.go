@@ -728,7 +728,7 @@ func startNode(ctx *cli.Context, stack *node.Node) *ngin.Ngin {
 		go core.BuildAddrTxIndex(ng.BlockChain(), ng.ChainDb(), a.Db, math.MaxUint64, math.MaxUint64, 10000)
 	}
 	if ctx.GlobalBool(aliasableName(MiningEnabledFlag.Name, ctx)) {
-		if err := ng.StartMining(ctx.GlobalInt(aliasableName(MinerThreadsFlag.Name, ctx))); err != nil {
+		if err := ng.StartMining(ctx.GlobalInt(aliasableName(MinerThreadsFlag.Name, ctx)), ""); err != nil {
 			glog.Fatalf("Failed to start mining: %v", err)
 		}
 	}

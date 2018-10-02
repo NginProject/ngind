@@ -48,9 +48,6 @@ import (
 	"github.com/NginProject/ngind/rpc"
 )
 
-const (
-	cryptonightRevision = 1
-)
 
 type Config struct {
 	ChainConfig *core.ChainConfig // chain configuration

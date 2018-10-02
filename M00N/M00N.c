@@ -132,9 +132,9 @@ void M00N_hash(void *ctx2, const char* input, char* output, uint32_t len) {
     hash_permutation(&ctx->state.hs);
 
     /*memcpy(hash, &state, 32);*/
-    for (i = 0; i < ctx->state.hs.b[0] & 4; i++){
-        extra_hashes[ctx->state.hs.b[0] & 4](&ctx->state, 200, output);
-    }
+
+    extra_hashes[ctx->state.hs.b[0] & 4](&ctx->state, 200, output);
+
     oaes_free((OAES_CTX **) &ctx->aes_ctx);
 }
 

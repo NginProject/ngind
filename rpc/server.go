@@ -57,7 +57,7 @@ func NewServer() *Server {
 	server := &Server{
 		services:      make(serviceRegistry),
 		subscriptions: make(subscriptionRegistry),
-		codecs:        set.New(set.ThreadSafe),
+		codecs:        set.New(),
 		run:           1,
 	}
 

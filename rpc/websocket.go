@@ -55,7 +55,7 @@ func (rw *wsReaderWriterCloser) Close() error {
 // websocket upgrade process. When a '*' is specified as an allowed origins all
 // connections are accepted.
 func wsHandshakeValidator(allowedOrigins []string) func(*websocket.Config, *http.Request) error {
-	origins := set.New(set.ThreadSafe)
+	origins := set.New()
 	allowAllOrigins := false
 
 	for _, origin := range allowedOrigins {

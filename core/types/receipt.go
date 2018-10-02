@@ -26,6 +26,14 @@ import (
 	"github.com/NginProject/ngind/rlp"
 )
 
+type ReceiptStatus byte
+
+const (
+	TxFailure       ReceiptStatus = 0
+	TxSuccess       ReceiptStatus = 1
+	TxStatusUnknown ReceiptStatus = 0xFF
+)
+
 // Receipt represents the results of a transaction.
 type Receipt struct {
 	// Consensus fields
@@ -38,11 +46,12 @@ type Receipt struct {
 	TxHash          common.Hash
 	ContractAddress common.Address
 	GasUsed         *big.Int
+	Status          ReceiptStatus
 }
 
 // NewReceipt creates a barebone transaction receipt, copying the init fields.
 func NewReceipt(root []byte, cumulativeGasUsed *big.Int) *Receipt {
-	return &Receipt{PostState: common.CopyBytes(root), CumulativeGasUsed: new(big.Int).Set(cumulativeGasUsed)}
+	return &Receipt{PostState: common.CopyBytes(root), CumulativeGasUsed: new(big.Int).Set(cumulativeGasUsed), Status: TxStatusUnknown}
 }
 
 // EncodeRLP implements rlp.Encoder, and flattens the consensus fields of a receipt
