@@ -1,4 +1,4 @@
-version: 0.1.1
+version: 0.1.{build}
 platform: x64
 clone_folder: c:\gopath\src\github.com\NginProject\ngind
 branches:
