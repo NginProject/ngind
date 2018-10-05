@@ -9,7 +9,8 @@ environment:
   GOPATH: c:\gopath
 install:
   - set PATH=%GOPATH%\bin;c:\go\bin;C:\msys64\mingw64\bin;C:\msys64\usr\bin\;%PATH%
-
+  - set GO111MODULE=on
+  
   # Install Rust.
   - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
   - rustup-init -yv --default-toolchain stable --default-host x86_64-pc-windows-gnu
