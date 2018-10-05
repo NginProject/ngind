@@ -1,0 +1,43 @@
+version: 0.1.1
+platform: x64
+clone_folder: c:\gopath\src\github.com\NginProject\ngind
+branches:
+  only:
+    - develop
+os: Visual Studio 2015
+environment:
+  GOPATH: c:\gopath
+install:
+  - set PATH=%GOPATH%\bin;c:\go\bin;C:\msys64\mingw64\bin;C:\msys64\usr\bin\;%PATH%
+
+  # Install Rust.
+  - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+  - rustup-init -yv --default-toolchain stable --default-host x86_64-pc-windows-gnu
+  - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - rustup update
+
+  - cd c:\gopath\src\github.com\NginProject
+  - git clone https://github.com/NginProject/sputnikvm-ffi
+  - cd c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\ffi
+  - cargo build --release
+  - copy c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\ffi\target\release\sputnikvm_ffi.lib c:\gopath\src\github.com\ETCDEVTeam\sputnikvm-ffi\c\sputnikvm.lib
+  - set CGO_LDFLAGS=-Wl,--allow-multiple-definition c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\sputnikvm.lib -lws2_32 -luserenv
+
+  - cd c:\gopath\src\github.com\NginProject\ngind
+
+  - echo %VERSION_BASE% %VERSION%
+  - echo %PATH%
+  - echo %GOPATH%
+  - go version
+  - go env
+  - go get golang.org/x/sys/windows
+  - go mod download
+
+build_script:
+  - go build -tags=sputnikvm -ldflags "-X main.Version=%VERSION%" github.com/NginProject/ngind/cmd/ngind
+  - ps: >-
+      .\ngind.exe version | Where {$_ -match "^Version: "} | %{$actual=($_ -split "\s+")[1];If($actual -ne $env:VERSION){"Expected: `"$env:VERSION`", got: `"$ACTUAL`""; exit 1}}
+  - 7z a ngind-win64-%VERSION%.zip ngind.exe
+
+artifacts:
+  - path: ngind-win64-%VERSION%.zip

@@ -10,7 +10,7 @@ BUILD_TIME=`date +%FT%T%z`
 COMMIT=`git log --pretty=format:'%h' -n 1`
 
 # Choose to install ngind with or without SputnikVM.
-WITH_SVM?=0
+WITH_SVM?=1
 
 # Provide default value of GOPATH, if it's not set in environment
 export GOPATH?=${HOME}/go
@@ -21,7 +21,7 @@ LDFLAGS=-ldflags "-X main.Version="`git describe --tags`
 build: cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump cmd/ngind ## Build a local snapshot binary versions of all commands
 	@ls -ld $(BINARY)/*
 
-cmd/ngind: chainconfig ## Build a local snapshot binary version of ngind. Use WITH_SVM=1 to enable building with SputnikVM (default: WITH_SVM=0)
+cmd/ngind: chainconfig ## Build a local snapshot binary version of ngind. Use WITH_SVM=1 to enable building with SputnikVM (default: WITH_SVM=1)
 ifeq (${WITH_SVM}, 1)
 	./scripts/build_sputnikvm.sh build
 else

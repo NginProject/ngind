@@ -4,6 +4,10 @@ set -e
 
 OUTPUT="$1"
 
+if [ ! -d "Makefile" ]; then
+	exit
+fi
+
 if [ ! "$OUTPUT" == "build" ] && [ ! "$OUTPUT" == "install" ]; then
 	echo "Specify 'install' or 'build' as first argument."
 	exit 1
@@ -13,18 +17,27 @@ fi
 
 OS=`uname -s`
 
+root_path="`pwd`"
 proj_path="github.com/NginProject" 
 ngin_path="$proj_path/ngind"
 sputnik_path="$proj_path/sputnikvm-ffi"
+proj_dir="$GOPATH/src/$proj_path"
 sputnik_dir="$GOPATH/src/$sputnik_path"
-
 ngin_bindir="$GOPATH/src/$ngin_path/bin"
+
+
+mkdir -p "$proj_path"
+
+if [ ! -d "$sputnik_dir" ]; then
+	echo "Go Geting SputnikVM"
+	git clone "https://$sputnik_path" 
+	mv sputnikvm-ffi "$proj_dir"
+fi
 
 echo "Building SputnikVM"
 make -C "$sputnik_dir/c"
 
 echo "Doing ngind $OUTPUT ..."
-cd "$GOPATH/src/$ngin_path"
 
 LDFLAGS="$sputnik_dir/c/libsputnikvm.a "
 case $OS in
@@ -47,5 +60,5 @@ if [ "$OUTPUT" == "install" ]; then
 	CGO_CFLAGS_ALLOW='-maes.*' CGO_LDFLAGS=$LDFLAGS go install -ldflags '-X main.Version='$(git describe --tags) -tags="sputnikvm netgo" ./cmd/ngind
 elif [ "$OUTPUT" == "build" ]; then
 	mkdir -p "$ngin_bindir"
-	CGO_CFLAGS_ALLOW='-maes.*' CGO_LDFLAGS=$LDFLAGS go build -ldflags '-X main.Version='$(git describe --tags) -o $ngin_bindir/ngind -tags="sputnikvm netgo" ./cmd/ngind
+	CGO_CFLAGS_ALLOW='-maes.*' CGO_LDFLAGS=$LDFLAGS go build -ldflags '-X main.Version='$(git describe --tags) -o "$root_path/bin/ngind" -tags="sputnikvm netgo" ./cmd/ngind
 fi
