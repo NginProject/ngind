@@ -20,7 +20,7 @@ install:
   - git clone https://github.com/NginProject/sputnikvm-ffi
   - cd c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\ffi
   - cargo build --release
-  - copy c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\ffi\target\release\sputnikvm_ffi.lib c:\gopath\src\github.com\ETCDEVTeam\sputnikvm-ffi\c\sputnikvm.lib
+  - copy c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\ffi\target\release\sputnikvm_ffi.lib c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\sputnikvm.lib
   - set CGO_LDFLAGS=-Wl,--allow-multiple-definition c:\gopath\src\github.com\NginProject\sputnikvm-ffi\c\sputnikvm.lib -lws2_32 -luserenv
 
   - cd c:\gopath\src\github.com\NginProject\ngind
