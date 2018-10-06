@@ -34,7 +34,7 @@ const (
 	// The Ngin main network genesis block.
 	defaultGenesisHash = "0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3"
 	// !EPROJECT We will need a bad block API
-	badBlocksURL = "https://badblocks.ethdev.com"
+	badBlocksURL = "https://badblocks.ngin.cash"
 )
 
 var EnableBadBlockReporting = false
@@ -63,7 +63,7 @@ func sendBadBlockReport(block *types.Block, err error) {
 			"protocolVersion": p.version,
 		}
 	}
-	jsonStr, _ := json.Marshal(map[string]interface{}{"method": ngin_badBlock", "id": "1", "jsonrpc": "2.0", "params": []interface{}{params}})
+	jsonStr, _ := json.Marshal(map[string]interface{}{"method": "ngin_badBlock", "id": "1", "jsonrpc": "2.0", "params": []interface{}{params}})
 	client := http.Client{Timeout: 8 * time.Second}
 	resp, err := client.Post(badBlocksURL, "application/json", bytes.NewReader(jsonStr))
 	if err != nil {
