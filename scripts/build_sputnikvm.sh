@@ -4,10 +4,6 @@ set -e
 
 OUTPUT="$1"
 
-if [ ! -d "Makefile" ]; then
-	exit
-fi
-
 if [ ! "$OUTPUT" == "build" ] && [ ! "$OUTPUT" == "install" ]; then
 	echo "Specify 'install' or 'build' as first argument."
 	exit 1
@@ -59,6 +55,8 @@ esac
 if [ "$OUTPUT" == "install" ]; then
 	CGO_CFLAGS_ALLOW='-maes.*' CGO_LDFLAGS=$LDFLAGS go install -ldflags '-X main.Version='$(git describe --tags) -tags="sputnikvm netgo" ./cmd/ngind
 elif [ "$OUTPUT" == "build" ]; then
-	mkdir -p "$ngin_bindir"
+	mkdir -p "$root_path/bin"
 	CGO_CFLAGS_ALLOW='-maes.*' CGO_LDFLAGS=$LDFLAGS go build -ldflags '-X main.Version='$(git describe --tags) -o "$root_path/bin/ngind" -tags="sputnikvm netgo" ./cmd/ngind
 fi
+
+echo "Save to $root_path/bin/ngind"
