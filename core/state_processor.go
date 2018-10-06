@@ -35,8 +35,8 @@ var (
 	MaximumBlockReward       =  OneTenthMaximumBlockReward.Mul(OneTenthMaximumBlockReward, big.NewInt(10)) // that's shiny 10 ngin
 	big8                     = big.NewInt(8)
 	big32                    = big.NewInt(32)
-	DisinflationRateQuotient = big.NewInt(4)
-	DisinflationRateDivisor  = big.NewInt(5)
+	DisinflationRateQuotient = big.NewInt(249)
+	DisinflationRateDivisor  = big.NewInt(250)
 
 	ErrConfiguration = errors.New("invalid configuration")
 )

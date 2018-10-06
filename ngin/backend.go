@@ -184,7 +184,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 	}
 	glog.V(logger.Info).Infof("Blockchain DB Version: %d", config.BlockChainVersion)
 
-	eth := &Ngin{
+	ngin := &Ngin{
 		config:            config,
 		shutdownChan:      make(chan bool),
 		chainDb:           chainDb,
@@ -207,17 +207,17 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 	}
 	switch {
 	case config.PowTest:
-		glog.V(logger.Info).Infof("Consensus: NginProject used in test mode")
-		eth.pow, err = M00N.NewForTesting()
+		glog.V(logger.Info).Infof("Consensus: M00N used in test mode")
+		ngin.pow, err = M00N.NewForTesting()
 		if err != nil {
 			return nil, err
 		}
 	case config.PowShared:
-		glog.V(logger.Info).Infof("Consensus: NginProject used in shared mode")
-		eth.pow = M00N.NewShared()
+		glog.V(logger.Info).Infof("Consensus: M00N used in shared mode")
+		ngin.pow = M00N.NewShared()
 
 	default:
-		eth.pow = M00N.New()
+		ngin.pow = M00N.New()
 	}
 
 	// Initialize indexes db if enabled
@@ -235,7 +235,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 		if err != nil {
 			return nil, err
 		}
-		eth.indexesDb = indexesDb
+		ngin.indexesDb = indexesDb
 	}
 
 	// load the genesis block or write a new one if no genesis
@@ -266,9 +266,9 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 		return nil, errors.New("missing chain config")
 	}
 
-	eth.chainConfig = config.ChainConfig
+	ngin.chainConfig = config.ChainConfig
 
-	eth.blockchain, err = core.NewBlockChain(chainDb, eth.chainConfig, eth.pow, eth.EventMux())
+	ngin.blockchain, err = core.NewBlockChain(chainDb, ngin.chainConfig, ngin.pow, ngin.EventMux())
 	if err != nil {
 		if err == core.ErrNoGenesis {
 			return nil, fmt.Errorf(`No chain found. Please initialise a new chain using the "init" subcommand.`)
@@ -277,29 +277,29 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 	}
 	// Configure enabled atxi for blockchain
 	if config.UseAddrTxIndex {
-		eth.blockchain.SetAtxi(&core.AtxiT{
-			Db: eth.indexesDb,
+		ngin.blockchain.SetAtxi(&core.AtxiT{
+			Db: ngin.indexesDb,
 		})
 	}
 
-	eth.gpo = NewGasPriceOracle(eth)
+	ngin.gpo = NewGasPriceOracle(ngin)
 
-	newPool := core.NewTxPool(eth.chainConfig, eth.EventMux(), eth.blockchain.State, eth.blockchain.GasLimit)
-	eth.txPool = newPool
+	newPool := core.NewTxPool(ngin.chainConfig, ngin.EventMux(), ngin.blockchain.State, ngin.blockchain.GasLimit)
+	ngin.txPool = newPool
 
 	m := downloader.FullSync
 	if config.FastSync {
 		m = downloader.FastSync
 	}
-	if eth.protocolManager, err = NewProtocolManager(eth.chainConfig, m, uint64(config.NetworkId), eth.eventMux, eth.txPool, eth.pow, eth.blockchain, chainDb); err != nil {
+	if ngin.protocolManager, err = NewProtocolManager(ngin.chainConfig, m, uint64(config.NetworkId), ngin.eventMux, ngin.txPool, ngin.pow, ngin.blockchain, chainDb); err != nil {
 		return nil, err
 	}
-	eth.miner = miner.New(eth, eth.chainConfig, eth.EventMux(), eth.pow)
-	if err = eth.miner.SetGasPrice(config.GasPrice); err != nil {
+	ngin.miner = miner.New(ngin, ngin.chainConfig, ngin.EventMux(), ngin.pow)
+	if err = ngin.miner.SetGasPrice(config.GasPrice); err != nil {
 		return nil, err
 	}
 
-	return eth, nil
+	return ngin, nil
 }
 
 // APIs returns the collection of RPC services the ethereum package offers.
