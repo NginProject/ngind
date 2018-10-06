@@ -158,25 +158,25 @@ web3._extend({
 	[
 		new web3._extend.Method({
 			name: 'getAddressTransactions',
-			call: 'gngin_getAddressTransactions',
+			call: 'ngin_getAddressTransactions',
 			params: 8,
 			inputFormatter: [web3._extend.formatters.inputAddressFormatter, null, web3._extend.formatters.inputDefaultBlockNumberFormatter, null, null, null, null, null]
 		}),
 		new web3._extend.Method({
 			name: 'getTransactionsByAddress',
-			call: 'gngin_getTransactionsByAddress',
+			call: 'ngin_getTransactionsByAddress',
 			params: 8,
 			inputFormatter: [web3._extend.formatters.inputAddressFormatter, null, web3._extend.formatters.inputDefaultBlockNumberFormatter, null, null, null, null, null]
 		}),
 		new web3._extend.Method({
 			name: 'buildATXI',
-			call: 'gngin_buildATXI',
+			call: 'ngin_buildATXI',
 			params: 3,
 			inputFormatter: [web3._extend.formatters.inputDefaultBlockNumberFormatter, web3._extend.formatters.inputDefaultBlockNumberFormatter, null]
 		}),
 		new web3._extend.Method({
 			name: 'getATXIBuildStatus',
-			call: 'gngin_getATXIBuildStatus',
+			call: 'ngin_getATXIBuildStatus',
 			params: 0,
 		})
 	],
