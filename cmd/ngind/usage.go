@@ -141,6 +141,12 @@ var AppHelpFlagAndCommandGroups = []flagGroup{
 		},
 	},
 	{
+		Name: "MASTERNODE",
+		Flags: []cli.Flag{
+			MasternodeFlag,
+		},
+	},
+	{
 		Name: "MINER",
 		Flags: []cli.Flag{
 			MiningEnabledFlag,
