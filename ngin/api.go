@@ -1992,7 +1992,7 @@ func (s *PublicBlockChainAPI) TraceCall(args CallArgs, blockNr rpc.BlockNumber) 
 	vmenv := core.NewEnv(stateDb, s.config, s.bc, msg, block.Header())
 	gp := new(core.GasPool).AddGas(common.MaxBig)
 
-	ret, gas, _, err := core.ApplyMessage(vmenv, msg, gp)
+	ret, gas, err := core.ApplyMessage(vmenv, msg, gp)
 	return &ExecutionResult{
 		Gas:         gas,
 		ReturnValue: fmt.Sprintf("%x", ret),
@@ -2013,7 +2013,7 @@ func (s *PublicDebugAPI) TraceTransaction(txHash common.Hash) (*ExecutionResult,
 	}
 
 	gp := new(core.GasPool).AddGas(tx.Gas())
-	ret, gas, _, err := core.ApplyMessage(vmenv, msg, gp)
+	ret, gas, err := core.ApplyMessage(vmenv, msg, gp)
 	return &ExecutionResult{
 		Gas:         gas,
 		ReturnValue: fmt.Sprintf("%x", ret),
@@ -2068,7 +2068,7 @@ func (s *PublicDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (core.
 		}
 
 		gp := new(core.GasPool).AddGas(tx.Gas())
-		_, _, _, err := core.ApplyMessage(vmenv, msg, gp)
+		_, _, err := core.ApplyMessage(vmenv, msg, gp)
 		if err != nil {
 			return nil, nil, fmt.Errorf("tx %x failed: %v", tx.Hash(), err)
 		}
