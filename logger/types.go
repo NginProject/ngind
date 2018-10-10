@@ -44,7 +44,7 @@ type LogEvent struct {
 
 type LogStarting struct {
 	ClientString    string `json:"client_impl"`
-	ProtocolVersion int    `json:"eth_version"`
+	ProtocolVersion int    `json:"protocol_ver"`
 	LogEvent
 }
 
@@ -74,7 +74,7 @@ func (l *P2PDisconnected) EventName() string {
 	return "p2p.disconnected"
 }
 
-type EthMinerNewBlock struct {
+type MinerNewBlock struct {
 	BlockHash     string   `json:"block_hash"`
 	BlockNumber   *big.Int `json:"block_number"`
 	ChainHeadHash string   `json:"chain_head_hash"`
@@ -82,11 +82,11 @@ type EthMinerNewBlock struct {
 	LogEvent
 }
 
-func (l *EthMinerNewBlock) EventName() string {
+func (l *MinerNewBlock) EventName() string {
 	return "ngin.miner.new_block"
 }
 
-type EthChainReceivedNewBlock struct {
+type ChainReceivedNewBlock struct {
 	BlockHash     string   `json:"block_hash"`
 	BlockNumber   *big.Int `json:"block_number"`
 	ChainHeadHash string   `json:"chain_head_hash"`
@@ -95,11 +95,11 @@ type EthChainReceivedNewBlock struct {
 	LogEvent
 }
 
-func (l *EthChainReceivedNewBlock) EventName() string {
+func (l *ChainReceivedNewBlock) EventName() string {
 	return "ngin.chain.received.new_block"
 }
 
-type EthChainNewHead struct {
+type ChainNewHead struct {
 	BlockHash     string   `json:"block_hash"`
 	BlockNumber   *big.Int `json:"block_number"`
 	ChainHeadHash string   `json:"chain_head_hash"`
@@ -107,16 +107,16 @@ type EthChainNewHead struct {
 	LogEvent
 }
 
-func (l *EthChainNewHead) EventName() string {
+func (l *ChainNewHead) EventName() string {
 	return "ngin.chain.new_head"
 }
 
-type EthTxReceived struct {
+type TxReceived struct {
 	TxHash   string `json:"tx_hash"`
 	RemoteId string `json:"remote_id"`
 	LogEvent
 }
 
-func (l *EthTxReceived) EventName() string {
+func (l *TxReceived) EventName() string {
 	return "ngin.tx.received"
 }

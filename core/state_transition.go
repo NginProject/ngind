@@ -127,11 +127,11 @@ func NewStateTransition(env vm.Environment, msg Message, gp *GasPool) *StateTran
 // the gas used (which includes gas refunds) and an error if it failed. An error always
 // indicates a core error meaning that the message would always fail for that particular
 // state and would never be accepted within a block.
-func ApplyMessage(env vm.Environment, msg Message, gp *GasPool) ([]byte, *big.Int, bool, error) {
+func ApplyMessage(env vm.Environment, msg Message, gp *GasPool) ([]byte, *big.Int, error) {
 	st := NewStateTransition(env, msg, gp)
 
-	ret, gasUsed, failed, err := st.TransitionDb()
-	return ret, gasUsed, failed, err
+	ret, _, gasUsed, err := st.TransitionDb()
+	return ret, gasUsed, err
 }
 
 func (self *StateTransition) from() (vm.Account, error) {
@@ -221,7 +221,7 @@ func (self *StateTransition) preCheck() (err error) {
 }
 
 // TransitionDb will move the state by applying the message against the given environment.
-func (self *StateTransition) TransitionDb() (ret []byte, gas *big.Int, failed bool, err error) {
+func (self *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big.Int, err error) {
 	if err = self.preCheck(); err != nil {
 		return
 	}
@@ -232,40 +232,45 @@ func (self *StateTransition) TransitionDb() (ret []byte, gas *big.Int, failed bo
 	contractCreation := MessageCreatesContract(msg)
 	// Pay intrinsic gas
 	if err = self.useGas(IntrinsicGas(self.data, contractCreation, homestead)); err != nil {
-		return nil, nil, false, InvalidTxError(err)
+		return nil, nil, nil, InvalidTxError(err)
 	}
 
 	vmenv := self.env
 	//var addr common.Address
-	var vmerr error
 	if contractCreation {
-		ret, _, vmerr = vmenv.Create(sender, self.data, self.gas, self.gasPrice, self.value)
-		if homestead && vmerr == vm.CodeStoreOutOfGasError {
+		ret, _, err = vmenv.Create(sender, self.data, self.gas, self.gasPrice, self.value)
+		if homestead && err == vm.CodeStoreOutOfGasError {
 			self.gas = big.NewInt(0)
 		}
 
-		if vmerr != nil {
-			glog.V(logger.Core).Infoln("VM create err:", vmerr)
+		if err != nil {
+			ret = nil
+			glog.V(logger.Core).Infoln("VM create err:", err)
 		}
 	} else {
 		// Increment the nonce for the next transaction
 		self.state.SetNonce(sender.Address(), self.state.GetNonce(sender.Address())+1)
-		ret, vmerr = vmenv.Call(sender, self.to().Address(), self.data, self.gas, self.gasPrice, self.value)
-		if vmerr != nil {
-			glog.V(logger.Core).Infoln("VM call err:", vmerr)
+		ret, err = vmenv.Call(sender, self.to().Address(), self.data, self.gas, self.gasPrice, self.value)
+		if err != nil {
+			glog.V(logger.Core).Infoln("VM call err:", err)
 		}
 	}
 
-	if vmerr != nil && IsValueTransferErr(vmerr) {
-		// if the vmerr was a value transfer error, return immediately
-		// transaction receipt status will be set to TxSuccess
-		return nil, nil, false, InvalidTxError(vmerr)
+	if err != nil && IsValueTransferErr(err) {
+		return nil, nil, nil, InvalidTxError(err)
 	}
+
+	// We aren't interested in errors here. Errors returned by the VM are non-consensus errors and therefor shouldn't bubble up
+	if err != nil {
+		err = nil
+	}
+
+	requiredGas = new(big.Int).Set(self.gasUsed())
 
 	self.refundGas()
 	self.state.AddBalance(self.env.Coinbase(), new(big.Int).Mul(self.gasUsed(), self.gasPrice))
 
-	return ret, self.gasUsed(), vmerr != nil, err
+	return ret, requiredGas, self.gasUsed(), err
 }
 
 func (self *StateTransition) refundGas() {

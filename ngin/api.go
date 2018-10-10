@@ -1302,7 +1302,7 @@ func signHash(data []byte) []byte {
 }
 
 // EcRecover returns the address for the account that was used to create the signature.
-// Note, this function is compatible with eth_sign and personal_sign. As such it recovers
+// Note, this function is compatible with ngin_sign and personal_sign. As such it recovers
 // the address of:
 // hash = keccak256("\x19Ethereum Signed Message:\n"${message length}${message})
 // addr = ecrecover(hash, signature)
@@ -1672,7 +1672,7 @@ func NewPublicNginAPI(ngin *Ngin) *PublicNginAPI {
 }
 
 // GetTransactionsByAddress is an alias for GetAddressTransactions which aligns more closely
-// with established eth_transaction api namespace
+// with established ngin_transaction api namespace
 func (api *PublicNginAPI) GetTransactionsByAddress(address common.Address, blockStartN uint64, blockEndN rpc.BlockNumber, toOrFrom string, txKindOf string, pagStart, pagEnd int, reverse bool) (list []string, err error) {
 	return api.GetAddressTransactions(address, blockStartN, blockEndN, toOrFrom, txKindOf, pagStart, pagEnd, reverse)
 }

@@ -420,7 +420,7 @@ func (s *Server) readRequest(codec ServerCodec) ([]*serverRequest, bool, RPCErro
 			continue
 		}
 
-		if r.isPubSub { // eth_subscribe, r.method contains the subscription method name
+		if r.isPubSub { // ngin_subscribe, r.method contains the subscription method name
 			if callb, ok := svc.subscriptions[r.method]; ok {
 				requests[i] = &serverRequest{id: r.id, svcname: svc.name, callb: callb}
 				if r.params != nil && len(callb.argTypes) > 0 {

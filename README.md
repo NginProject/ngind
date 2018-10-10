@@ -26,17 +26,18 @@ build-essential`. On Mac: `xcode-select --install`.
 
 Executables installed from source will, by default, be installed in `$GOPATH/bin/`.
 
-##### With go:
+##### With go >= 1.11:
 
-- the full suite of utilities:
 ```
-$ go install github.com/NginProject/ngind/cmd/...`
+Linux & Mac:
+$ CGO_CFLAGS_ALLOW='.*' go install github.com/NginProject/ngind/cmd/ngind
+
+Windows:
+> set set CGO_CFLAGS_ALLOW=.*
+> go install github.com/NginProject/ngind/cmd/ngind
 ```
 
-- just __ngind__:
-```
-$ go install github.com/NginProject/ngind/cmd/ngind`
-```
+or you can use `go build`.
 
 ##### Building a specific release
 All the above commands results with building binaries from `HEAD`. To use a specific release/tag, use the following before installing:
@@ -77,7 +78,7 @@ This repository includes several wrappers/executables found in the `cmd` directo
 
 ### Data directory
 By default, ngind will store all node and blockchain data in a __parent directory__ depending on your OS:
-- Linux: `$HOME/.ngin/`
+- Linux: `$HOME/.Ngin/`
 - Mac: `$HOME/Library/Ngin/`
 - Windows: `$HOME/AppData/Roaming/Ngin/`
 
@@ -86,9 +87,6 @@ __You can specify this directory__ with `--data-dir=$HOME/id/rather/put/it/here`
 Within this parent directory, ngind will use a __/subdirectory__ to hold data for each network you run. The defaults are:
 
  - `/mainnet` for the Mainnet
- - `/testnet` for the Testnet Testnet
-
-__You can specify this subdirectory__ with `--chain=mycustomnet`.
 
 ### Full node on the main Ngin network
 
@@ -135,7 +133,7 @@ $ ngind account new
 
 This command will create a new account and prompt you to enter a passphrase to protect your account. It will return output similar to:
 ```
-Address: {52a8029355231d78099667a95d5875fab0d4fc4d}
+Address: {0x52a8029355231d78099667a95d5875fab0d4fc4d}
 ```
 So your address is: 0x52a8029355231d78099667a95d5875fab0d4fc4d
 
@@ -155,11 +153,19 @@ Learn more at the [Accounts Wiki Page](https://github.com/NginProject/ngind/wiki
 
 ### Fast synchronisation
 
-ngind syncs with the network automatically after start. However, this method is very slow. Alternatively, you can download blockchain file here: https://ngin.cash/blockchain.raw and import it by executing:
+ngind syncs with the network automatically after start. However, this method is might be slow for several nodes. Alternatively, you can download chaindata folder here: https://explorer.ngin.cash/chaindata.tar.gz and extract the "chaindata" folder into project folder:
 ```
-$ ngind --fakepow import <path where you downloaded the blockchain>/blockchain.raw
-```
+Linux:
+$ $HOME/.Ngin//mainnet/
 
+Mac
+$ $HOME/Library/Ngin/mainnet/
+
+Windows:
+> %APPDATA%\Ngin\mainnet\
+
+```
+Then, restart the ngin instance.
 
 ### Interact with the Javascript console
 ```
@@ -176,26 +182,6 @@ Learn more at the [Javascript Console Wiki page](https://github.com/NginProject/
 For a comprehensive list of command line options, please consult our [CLI Wiki page](https://github.com/NginProject/ngind/wiki/Command-Line-Options).
 
 ## :orange_book: ngind: developing and advanced useage
-
-### Testnet Testnet
-If you'd like to play around with creating Ngin contracts, you
-almost certainly would like to do that without any real money involved until you get the hang of the entire system. In other words, instead of attaching to the main network, you want to join the **test** network with your node, which is fully equivalent to the main network, but with play-Ether only.
-
-```
-$ ngind --chain=testnet --fast console
-```
-
-The `--fast` flag and `console` subcommand have the exact same meaning as above and they are equally useful on the testnet too. Please see above for their explanations if you've skipped to here.
-
-Specifying the `--chain=testnet` flag will reconfigure your ngind instance a bit:
-
- -  As mentioned above, ngind will host its testnet data in a `testnet` subfolder (`~/.ngin/testnet`).
- - Instead of connecting the main Ngin network, the client will connect to the test network, which uses different P2P bootnodes, different network IDs and genesis states.
-
-You may also optionally use `--testnet` or `--chain=testnet` to enable this configuration.
-
-> *Note: Although there are some internal protective measures to prevent transactions from crossing over between the main network and test network (different starting nonces), you should make sure to always use separate accounts for play-money and real-money. Unless you manually move accounts, ngind
-will by default correctly separate the two networks and will not make any accounts available between them.*
 
 ### Programatically interfacing ngind nodes
 
@@ -217,7 +203,7 @@ HTTP based JSON-RPC API options:
   * `--ws-api` API's offered over the WS-RPC interface (default: "eth,net,web3")
   * `--ws-origins` Origins from which to accept websockets requests
   * `--ipc-disable` Disable the IPC-RPC server
-  * `--ipc-api` API's offered over the IPC-RPC interface (default: "admin,debug,eth,miner,net,personal,shh,txpool,web3")
+  * `--ipc-api` API's offered over the IPC-RPC interface (default: "admin,debug,ngin,miner,net,personal,shh,txpool,web3")
   * `--ipc-path` Filename for IPC socket/pipe within the datadir (explicit paths escape it)
 
 You'll need to use your own programming environments' capabilities (libraries, tools, etc) to connect via HTTP, WS or IPC to a ngind node configured with the above flags and you'll need to speak [JSON-RPC](http://www.jsonrpc.org/specification) on all transports. You can reuse the same connection for multiple requests!
