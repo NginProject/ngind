@@ -106,7 +106,7 @@ func (hs *displayEventHandlers) runAllIfAny(ctx *cli.Context, e *ngin.Ngin, d in
 }
 
 // dispatchStatusLogs handle parsing --log-status=argument and toggling appropriate goroutine status feature logging.
-func dispatchStatusLogs(ctx *cli.Context, ethe *ngin.Ngin) {
+func dispatchStatusLogs(ctx *cli.Context, ngin *ngin.Ngin) {
 	flagName := aliasableName(LogStatusFlag.Name, ctx)
 	v := ctx.GlobalString(flagName)
 	if v == "" {
@@ -165,7 +165,7 @@ func dispatchStatusLogs(ctx *cli.Context, ethe *ngin.Ngin) {
 		case "sync":
 			availableLogStatusFeatures["sync"] = d
 			dsys := mustGetDisplaySystemFromName(ctx.GlobalString(DisplayFormatFlag.Name))
-			go runDisplayLogs(ctx, ethe, d, dsys)
+			go runDisplayLogs(ctx, ngin, d, dsys)
 		}
 	}
 }

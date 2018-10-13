@@ -47,15 +47,15 @@ type Miner struct {
 	threads  int
 	coinbase common.Address
 	mining   int32
-	eth      core.Backend
+	ngin     core.Backend
 	pow      pow.PoW
 
 	canStart    int32 // can start indicates whether we can start the mining operation
 	shouldStart int32 // should start indicates whether we should start after sync
 }
 
-func New(eth core.Backend, config *core.ChainConfig, mux *event.TypeMux, pow pow.PoW) *Miner {
-	miner := &Miner{eth: eth, mux: mux, pow: pow, worker: newWorker(config, common.Address{}, eth), canStart: 1}
+func New(ngin core.Backend, config *core.ChainConfig, mux *event.TypeMux, pow pow.PoW) *Miner {
+	miner := &Miner{ngin: ngin, mux: mux, pow: pow, worker: newWorker(config, common.Address{}, ngin), canStart: 1}
 	go miner.update()
 
 	return miner

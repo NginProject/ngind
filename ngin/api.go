@@ -90,28 +90,28 @@ func stateAndBlockByNumber(m *miner.Miner, bc *core.BlockChain, blockNr rpc.Bloc
 	return stateDb, block, err
 }
 
-// PublicEthereumAPI provides an API to access Ngin related information.
+// PublicNginAPI provides an API to access Ngin related information.
 // It offers only methods that operate on public data that is freely available to anyone.
-type PublicEthereumAPI struct {
+type PublicNginAPI struct {
 	e   *Ngin
 	gpo *GasPriceOracle
 }
 
-// NewPublicEthereumAPI creates a new Ngin protocol API.
-func NewPublicEthereumAPI(e *Ngin) *PublicEthereumAPI {
-	return &PublicEthereumAPI{
-		e:   e,
-		gpo: e.gpo,
+// NewPublicNginAPI creates a new Ngin protocol API.
+func NewPublicNginAPI(ngin *Ngin) *PublicNginAPI {
+	return &PublicNginAPI{
+		e:   ngin,
+		gpo: ngin.gpo,
 	}
 }
 
 // GasPrice returns a suggestion for a gas price.
-func (s *PublicEthereumAPI) GasPrice() *big.Int {
+func (s *PublicNginAPI) GasPrice() *big.Int {
 	return s.gpo.SuggestPrice()
 }
 
 // GetCompilers returns the collection of available smart contract compilers
-func (s *PublicEthereumAPI) GetCompilers() ([]string, error) {
+func (s *PublicNginAPI) GetCompilers() ([]string, error) {
 	solc, err := s.e.Solc()
 	if err == nil && solc != nil {
 		return []string{"Solidity"}, nil
@@ -121,7 +121,7 @@ func (s *PublicEthereumAPI) GetCompilers() ([]string, error) {
 }
 
 // CompileSolidity compiles the given solidity source
-func (s *PublicEthereumAPI) CompileSolidity(source string) (map[string]*compiler.Contract, error) {
+func (s *PublicNginAPI) CompileSolidity(source string) (map[string]*compiler.Contract, error) {
 	solc, err := s.e.Solc()
 	if err != nil {
 		return nil, err
@@ -135,17 +135,17 @@ func (s *PublicEthereumAPI) CompileSolidity(source string) (map[string]*compiler
 }
 
 // Coinbase is the address that mining rewards will be send to
-func (s *PublicEthereumAPI) Coinbase() (common.Address, error) {
+func (s *PublicNginAPI) Coinbase() (common.Address, error) {
 	return s.e.Coinbase()
 }
 
 // ProtocolVersion returns the current Ngin protocol version this node supports
-func (s *PublicEthereumAPI) ProtocolVersion() *rpc.HexNumber {
+func (s *PublicNginAPI) ProtocolVersion() *rpc.HexNumber {
 	return rpc.NewHexNumber(s.e.EthVersion())
 }
 
 // Hashrate returns the POW hashrate
-func (s *PublicEthereumAPI) Hashrate() *rpc.HexNumber {
+func (s *PublicNginAPI) Hashrate() *rpc.HexNumber {
 	return rpc.NewHexNumber(s.e.Miner().HashRate())
 }
 
@@ -156,7 +156,7 @@ func (s *PublicEthereumAPI) Hashrate() *rpc.HexNumber {
 // - highestBlock:  block number of the highest block header this node has received from peers
 // - pulledStates:  number of state entries processed until now
 // - knownStates:   number of known state entries that still need to be pulled
-func (s *PublicEthereumAPI) Syncing() (interface{}, error) {
+func (s *PublicNginAPI) Syncing() (interface{}, error) {
 	origin, current, height, pulled, known := s.e.Downloader().Progress()
 
 	// Return not syncing if the synchronisation already completed
@@ -178,7 +178,7 @@ func (s *PublicEthereumAPI) Syncing() (interface{}, error) {
 // Number will be returned as a string in hexadecimal format.
 // 61 - Mainnet $((0x3d))
 // 62 - Testnet $((0x3e))
-func (s *PublicEthereumAPI) ChainId() *big.Int {
+func (s *PublicNginAPI) ChainId() *big.Int {
 	return s.e.chainConfig.GetChainID()
 }
 
@@ -972,16 +972,16 @@ type PublicTransactionPoolAPI struct {
 }
 
 // NewPublicTransactionPoolAPI creates a new RPC service with methods specific for the transaction pool.
-func NewPublicTransactionPoolAPI(e *Ngin) *PublicTransactionPoolAPI {
+func NewPublicTransactionPoolAPI(ngin *Ngin) *PublicTransactionPoolAPI {
 	api := &PublicTransactionPoolAPI{
-		eventMux:      e.eventMux,
-		gpo:           e.gpo,
-		chainDb:       e.chainDb,
-		bc:            e.blockchain,
-		am:            e.accountManager,
-		txPool:        e.txPool,
-		txMu:          &e.txMu,
-		miner:         e.miner,
+		eventMux:      ngin.eventMux,
+		gpo:           ngin.gpo,
+		chainDb:       ngin.chainDb,
+		bc:            ngin.blockchain,
+		am:            ngin.accountManager,
+		txPool:        ngin.txPool,
+		txMu:          &ngin.txMu,
+		miner:         ngin.miner,
 		pendingTxSubs: make(map[string]rpc.Subscription),
 	}
 	go api.subscriptionLoop()
@@ -1573,18 +1573,18 @@ func (s *PublicTransactionPoolAPI) Resend(tx Tx, gasPrice, gasLimit *rpc.HexNumb
 // PrivateAdminAPI is the collection of Etheruem APIs exposed over the private
 // admin endpoint.
 type PrivateAdminAPI struct {
-	eth *Ngin
+	ngin *Ngin
 }
 
 // NewPrivateAdminAPI creates a new API definition for the private admin methods
 // of the Ngin service.
-func NewPrivateAdminAPI(eth *Ngin) *PrivateAdminAPI {
-	return &PrivateAdminAPI{eth: eth}
+func NewPrivateAdminAPI(ngin *Ngin) *PrivateAdminAPI {
+	return &PrivateAdminAPI{ngin: ngin}
 }
 
 // SetSolc sets the Solidity compiler path to be used by the node.
 func (api *PrivateAdminAPI) SetSolc(path string) (string, error) {
-	solc, err := api.eth.SetSolc(path)
+	solc, err := api.ngin.SetSolc(path)
 	if err != nil {
 		return "", err
 	}
@@ -1601,7 +1601,7 @@ func (api *PrivateAdminAPI) ExportChain(file string) (bool, error) {
 	defer out.Close()
 
 	// Export the blockchain
-	if err := api.eth.BlockChain().Export(out); err != nil {
+	if err := api.ngin.BlockChain().Export(out); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -1646,12 +1646,12 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 			break
 		}
 
-		if hasAllBlocks(api.eth.BlockChain(), blocks) {
+		if hasAllBlocks(api.ngin.BlockChain(), blocks) {
 			blocks = blocks[:0]
 			continue
 		}
 		// Import the batch and reset the buffer
-		if res := api.eth.BlockChain().InsertChain(blocks); res.Error != nil {
+		if res := api.ngin.BlockChain().InsertChain(blocks); res.Error != nil {
 			return false, fmt.Errorf("batch %d: failed to insert: %v", batch, res.Error)
 		}
 		blocks = blocks[:0]
@@ -1770,23 +1770,23 @@ func (api *PublicNginAPI) GetATXIBuildStatus() (*core.AtxiProgressT, error) {
 // PublicDebugAPI is the collection of Etheruem APIs exposed over the public
 // debugging endpoint.
 type PublicDebugAPI struct {
-	ng *Ngin
+	ngin *Ngin
 }
 
 // NewPublicDebugAPI creates a new API definition for the public debug methods
 // of the Ngin service.
 func NewPublicDebugAPI(ngin *Ngin) *PublicDebugAPI {
-	return &PublicDebugAPI{ng: ngin}
+	return &PublicDebugAPI{ngin: ngin}
 }
 
 // DumpBlock retrieves the entire state of the database at a given block.
 // TODO: update to be able to dump for specific addresses?
 func (api *PublicDebugAPI) DumpBlock(number uint64) (state.Dump, error) {
-	block := api.ng.BlockChain().GetBlockByNumber(number)
+	block := api.ngin.BlockChain().GetBlockByNumber(number)
 	if block == nil {
 		return state.Dump{}, fmt.Errorf("block #%d not found", number)
 	}
-	stateDb, err := api.ng.BlockChain().StateAt(block.Root())
+	stateDb, err := api.ngin.BlockChain().StateAt(block.Root())
 	if err != nil {
 		return state.Dump{}, err
 	}
@@ -1795,11 +1795,11 @@ func (api *PublicDebugAPI) DumpBlock(number uint64) (state.Dump, error) {
 
 // AccountExist checks whether an address is considered exists at a given block.
 func (api *PublicDebugAPI) AccountExist(address common.Address, number uint64) (bool, error) {
-	block := api.ng.BlockChain().GetBlockByNumber(number)
+	block := api.ngin.BlockChain().GetBlockByNumber(number)
 	if block == nil {
 		return false, fmt.Errorf("block #%d not found", number)
 	}
-	stateDb, err := api.ng.BlockChain().StateAt(block.Root())
+	stateDb, err := api.ngin.BlockChain().StateAt(block.Root())
 	if err != nil {
 		return false, err
 	}
@@ -1808,7 +1808,7 @@ func (api *PublicDebugAPI) AccountExist(address common.Address, number uint64) (
 
 // GetBlockRlp retrieves the RLP encoded for of a single block.
 func (api *PublicDebugAPI) GetBlockRlp(number uint64) (string, error) {
-	block := api.ng.BlockChain().GetBlockByNumber(number)
+	block := api.ngin.BlockChain().GetBlockByNumber(number)
 	if block == nil {
 		return "", fmt.Errorf("block #%d not found", number)
 	}
@@ -1821,7 +1821,7 @@ func (api *PublicDebugAPI) GetBlockRlp(number uint64) (string, error) {
 
 // PrintBlock retrieves a block and returns its pretty printed form.
 func (api *PublicDebugAPI) PrintBlock(number uint64) (string, error) {
-	block := api.ng.BlockChain().GetBlockByNumber(number)
+	block := api.ngin.BlockChain().GetBlockByNumber(number)
 	if block == nil {
 		return "", fmt.Errorf("block #%d not found", number)
 	}
@@ -1829,7 +1829,7 @@ func (api *PublicDebugAPI) PrintBlock(number uint64) (string, error) {
 }
 
 func (api *PublicDebugAPI) SetHead(number uint64) (bool, error) {
-	if e := api.ng.BlockChain().SetHead(number); e != nil {
+	if e := api.ngin.BlockChain().SetHead(number); e != nil {
 		return false, e
 	}
 	return true, nil
@@ -2002,7 +2002,7 @@ func (s *PublicBlockChainAPI) TraceCall(args CallArgs, blockNr rpc.BlockNumber) 
 // TraceTransaction returns the amount of gas and execution result of the given transaction.
 func (s *PublicDebugAPI) TraceTransaction(txHash common.Hash) (*ExecutionResult, error) {
 	var result *ExecutionResult
-	tx, blockHash, _, txIndex := core.GetTransaction(s.ng.ChainDb(), txHash)
+	tx, blockHash, _, txIndex := core.GetTransaction(s.ngin.ChainDb(), txHash)
 	if tx == nil {
 		return result, fmt.Errorf("tx '%x' not found", txHash)
 	}
@@ -2024,15 +2024,15 @@ func (s *PublicDebugAPI) TraceTransaction(txHash common.Hash) (*ExecutionResult,
 func (s *PublicDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (core.Message, *core.VMEnv, error) {
 
 	// Create the parent state.
-	block := s.ng.BlockChain().GetBlock(blockHash)
+	block := s.ngin.BlockChain().GetBlock(blockHash)
 	if block == nil {
 		return nil, nil, fmt.Errorf("block %x not found", blockHash)
 	}
-	parent := s.ng.BlockChain().GetBlock(block.ParentHash())
+	parent := s.ngin.BlockChain().GetBlock(block.ParentHash())
 	if parent == nil {
 		return nil, nil, fmt.Errorf("block parent %x not found", block.ParentHash())
 	}
-	statedb, err := s.ng.BlockChain().StateAt(parent.Root())
+	statedb, err := s.ngin.BlockChain().StateAt(parent.Root())
 	if err != nil {
 		return nil, nil, err
 	}
@@ -2062,7 +2062,7 @@ func (s *PublicDebugAPI) computeTxEnv(blockHash common.Hash, txIndex int) (core.
 			data:     tx.Data(),
 		}
 
-		vmenv := core.NewEnv(statedb, s.ng.chainConfig, s.ng.BlockChain(), msg, block.Header())
+		vmenv := core.NewEnv(statedb, s.ngin.chainConfig, s.ngin.BlockChain(), msg, block.Header())
 		if idx == txIndex {
 			return msg, vmenv, nil
 		}

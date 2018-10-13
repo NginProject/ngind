@@ -265,7 +265,7 @@ func init() {
 				fi: FileInfo{
 					name:    "mainnet.json",
 					size:    1455,
-					modTime: time.Unix(0, 1538479444727798500),
+					modTime: time.Unix(0, 1538479444000000000),
 					isDir:   false,
 				},
 			}, "/core/config/testnet.json": File{
@@ -395,7 +395,7 @@ func init() {
 				fi: FileInfo{
 					name:    "testnet.json",
 					size:    1445,
-					modTime: time.Unix(0, 1538156190155053000),
+					modTime: time.Unix(0, 1538156190000000000),
 					isDir:   false,
 				},
 			},

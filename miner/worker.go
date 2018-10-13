@@ -102,7 +102,7 @@ type worker struct {
 	agents map[Agent]struct{}
 	recv   chan *Result
 
-	eth     core.Backend
+	ngin    core.Backend
 	chain   *core.BlockChain
 	proc    core.Validator
 	chainDb ngindb.Database
@@ -125,16 +125,16 @@ type worker struct {
 	fullValidation bool
 }
 
-func newWorker(config *core.ChainConfig, coinbase common.Address, eth core.Backend) *worker {
+func newWorker(config *core.ChainConfig, coinbase common.Address, ngin core.Backend) *worker {
 	worker := &worker{
 		config:         config,
-		eth:            eth,
-		mux:            eth.EventMux(),
-		chainDb:        eth.ChainDb(),
+		ngin:           ngin,
+		mux:            ngin.EventMux(),
+		chainDb:        ngin.ChainDb(),
 		recv:           make(chan *Result, resultQueueSize),
 		gasPrice:       new(big.Int),
-		chain:          eth.BlockChain(),
-		proc:           eth.BlockChain().Validator(),
+		chain:          ngin.BlockChain(),
+		proc:           ngin.BlockChain().Validator(),
 		possibleUncles: make(map[common.Hash]*types.Block),
 		coinbase:       coinbase,
 		txQueue:        make(map[common.Hash]*types.Transaction),
@@ -269,17 +269,17 @@ func (self *worker) wait() {
 				go self.mux.Post(core.NewMinedBlockEvent{Block: block})
 			} else {
 				work.state.CommitTo(self.chainDb, false)
-				//parent := self.chain.GetBlock(block.ParentHash())
-				//if parent == nil {
-				//	glog.V(logger.Error).Infoln("Invalid block found during mining")
-				//	continue
-				//}
-				//
-				//auxValidator := self.eth.BlockChain().AuxValidator()
-				//if err := core.ValidateHeader(self.config, auxValidator, block.Header(), parent.Header(), true, false); err != nil && err != core.BlockFutureErr {
-				//	glog.V(logger.Error).Infoln("Invalid header on mined block:", err)
-				//	continue
-				//}
+				parent := self.chain.GetBlock(block.ParentHash())
+				if parent == nil {
+					glog.V(logger.Error).Infoln("Invalid block found during mining")
+					continue
+				}
+
+				auxValidator := self.ngin.BlockChain().AuxValidator()
+				if err := core.ValidateHeader(self.config, auxValidator, block.Header(), parent.Header(), true, false); err != nil && err != core.BlockFutureErr {
+					glog.V(logger.Error).Infoln("Invalid header on mined block:", err)
+					continue
+				}
 
 				stat, err := self.chain.WriteBlock(block)
 				if err != nil {
@@ -386,7 +386,7 @@ func (self *worker) makeCurrent(parent *types.Block, header *types.Header) error
 		work.family.Add(ancestor.Hash())
 		work.ancestors.Add(ancestor.Hash())
 	}
-	accounts := self.eth.AccountManager().Accounts()
+	accounts := self.ngin.AccountManager().Accounts()
 
 	// Keep track of transactions which return errors so they can be removed
 	work.remove = set.New()
@@ -497,7 +497,7 @@ func (self *worker) commitNewWork() {
 	*/
 
 	//approach 2
-	transactions := self.eth.TxPool().GetTransactions()
+	transactions := self.ngin.TxPool().GetTransactions()
 	types.SortByPriceAndNonce(transactions)
 
 	/* // approach 3
@@ -528,7 +528,7 @@ func (self *worker) commitNewWork() {
 	*/
 
 	work.commitTransactions(self.mux, transactions, self.gasPrice, self.chain)
-	self.eth.TxPool().RemoveTransactions(work.lowGasTxs)
+	self.ngin.TxPool().RemoveTransactions(work.lowGasTxs)
 
 	// compute uncles for the new block.
 	var (
@@ -620,11 +620,10 @@ func (env *Work) commitTransactions(mux *event.TypeMux, transactions types.Trans
 		from, _ := types.Sender(env.signer, tx)
 		// Check whether the tx is replay protected. If we're not in the EIP155 hf
 		// phase, start ignoring the sender until we do.
-		// if tx.Protected() && !env.config.IsDiehard(env.header.Number) {
-		if tx.Protected() {
-			glog.V(logger.Detail).Infof("Transaction (%x) is replay protected, but we haven't yet hardforked. Transaction will be ignored until we hardfork.\n", tx.Hash())
-			continue
-		}
+		//if tx.Protected() && !env.config.IsDiehard(env.header.Number) {
+		//	glog.V(logger.Detail).Infof("Transaction (%x) is replay protected, but we haven't yet hardforked. Transaction will be ignored until we hardfork.\n", tx.Hash())
+		//	continue
+		//}
 
 		// Check if it falls within margin. Txs from owned accounts are always processed.
 		if tx.GasPrice().Cmp(gasPrice) < 0 && !env.ownedAccounts.Has(from) {

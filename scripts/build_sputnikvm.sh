@@ -21,8 +21,7 @@ proj_dir="$GOPATH/src/$proj_path"
 sputnik_dir="$GOPATH/src/$sputnik_path"
 ngin_bindir="$GOPATH/src/$ngin_path/bin"
 
-
-mkdir -p "$proj_path"
+mkdir -p "$proj_dir"
 
 if [ ! -d "$sputnik_dir" ]; then
 	echo "Go Geting SputnikVM"

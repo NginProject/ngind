@@ -87,5 +87,8 @@ clean: ## Remove local snapshot binary directory
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+release:
+    
+
 
 .PHONY: fmt build cmd/ngind cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump install install_ngind clean help static

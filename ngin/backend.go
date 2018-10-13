@@ -309,7 +309,7 @@ func (s *Ngin) APIs() []rpc.API {
 		{
 			Namespace: "ngin",
 			Version:   "1.0",
-			Service:   NewPublicEthereumAPI(s),
+			Service:   NewPublicNginAPI(s),
 			Public:    true,
 		}, {
 			Namespace: "ngin",

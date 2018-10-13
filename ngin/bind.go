@@ -33,18 +33,18 @@ import (
 // object. These should be rewritten to internal Go method calls when the Go API
 // is refactored to support a clean library use.
 type ContractBackend struct {
-	eapi  *PublicEthereumAPI        // Wrapper around the Ngin object to access metadata
+	eapi  *PublicNginAPI            // Wrapper around the Ngin object to access metadata
 	bcapi *PublicBlockChainAPI      // Wrapper around the blockchain to access chain data
 	txapi *PublicTransactionPoolAPI // Wrapper around the transaction pool to access transaction data
 }
 
 // NewContractBackend creates a new native contract backend using an existing
 // Etheruem object.
-func NewContractBackend(eth *Ngin) *ContractBackend {
+func NewContractBackend(ngin *Ngin) *ContractBackend {
 	return &ContractBackend{
-		eapi:  NewPublicEthereumAPI(eth),
-		bcapi: NewPublicBlockChainAPI(eth.chainConfig, eth.blockchain, eth.miner, eth.chainDb, eth.gpo, eth.eventMux, eth.accountManager),
-		txapi: NewPublicTransactionPoolAPI(eth),
+		eapi:  NewPublicNginAPI(ngin),
+		bcapi: NewPublicBlockChainAPI(ngin.chainConfig, ngin.blockchain, ngin.miner, ngin.chainDb, ngin.gpo, ngin.eventMux, ngin.accountManager),
+		txapi: NewPublicTransactionPoolAPI(ngin),
 	}
 }
 
