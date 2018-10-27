@@ -78,7 +78,7 @@ type sigCache struct {
 //
 // From may cache the address, allowing it to be used regardless of
 // signing method.
-func Sender(signer Signer, tx *Transaction) (common.Address, error) {
+func Sender(signer Signer, tx *Transaction) (common.Address, error) { // TODO
 	if sc := tx.from.Load(); sc != nil {
 		sigCache := sc.(sigCache)
 		// If the signer used to derive from in a previous
