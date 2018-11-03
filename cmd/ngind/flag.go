@@ -331,17 +331,25 @@ func MakeNAT(ctx *cli.Context) nat.Interface {
 
 // MakeRPCModules splits input separated by a comma and trims excessive white
 // space from the substrings.
-func MakeRPCModules(input string) []string {
+func MakeRPCModules(ctx *cli.Context, input string) []string {
 	result := strings.Split(input, ",")
 	for i, r := range result {
 		result[i] = strings.TrimSpace(r)
 	}
-	return result
+
+	if ctx.GlobalIsSet(MasternodeFlag.Name) {
+		return append(result, "net")
+	}else{
+		return result
+	}
 }
 
 // MakeHTTPRpcHost creates the HTTP RPC listener interface string from the set
 // command line flags, returning empty if the HTTP endpoint is disabled.
 func MakeHTTPRpcHost(ctx *cli.Context) string {
+	if ctx.GlobalIsSet(MasternodeFlag.Name) {
+		return "0.0.0.0"
+	}
 	if !ctx.GlobalBool(aliasableName(RPCEnabledFlag.Name, ctx)) {
 		return ""
 	}
@@ -546,11 +554,11 @@ func mustMakeStackConf(ctx *cli.Context, name string, config *core.SufficientCha
 		HTTPHost:        MakeHTTPRpcHost(ctx),
 		HTTPPort:        ctx.GlobalInt(aliasableName(RPCPortFlag.Name, ctx)),
 		HTTPCors:        ctx.GlobalString(aliasableName(RPCCORSDomainFlag.Name, ctx)),
-		HTTPModules:     MakeRPCModules(ctx.GlobalString(aliasableName(RPCApiFlag.Name, ctx))),
+		HTTPModules:     MakeRPCModules(ctx, ctx.GlobalString(aliasableName(RPCApiFlag.Name, ctx))),
 		WSHost:          MakeWSRpcHost(ctx),
 		WSPort:          ctx.GlobalInt(aliasableName(WSPortFlag.Name, ctx)),
 		WSOrigins:       ctx.GlobalString(aliasableName(WSAllowedOriginsFlag.Name, ctx)),
-		WSModules:       MakeRPCModules(ctx.GlobalString(aliasableName(WSApiFlag.Name, ctx))),
+		WSModules:       MakeRPCModules(ctx, ctx.GlobalString(aliasableName(WSApiFlag.Name, ctx))),
 	}
 
 	// Configure the Whisper service
@@ -680,7 +688,7 @@ func mustMakeSufficientChainConfig(ctx *cli.Context) *core.SufficientChainConfig
 		// Initialise chain configuration before handling migrations or setting up node.
 		config.Identity = chainIdentity
 		config.Name = mustMakeChainConfigNameDefaulty(ctx)
-		config.Network = ngin.NetworkId // 1, default mainnet
+		config.Network = ngin.NetworkId // 52520, default mainnet, etc/eth is 1
 		config.Consensus = "M00N"
 		config.Genesis = core.DefaultConfigMainnet.Genesis
 		config.ChainConfig = MustMakeChainConfigFromDefaults(ctx).SortForks()

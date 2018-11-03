@@ -20,6 +20,7 @@ package core
 import (
 	"errors"
 	"fmt"
+	"github.com/NginProject/ngind/common"
 	"math/big"
 
 	"github.com/NginProject/ngind/core/state"
@@ -38,6 +39,7 @@ var (
 	DisinflationRateQuotient = big.NewInt(249)
 	DisinflationRateDivisor  = big.NewInt(250)
 
+	// MasterNodeForkEra      = big.NewInt(100) // TODO
 	ErrConfiguration = errors.New("invalid configuration")
 )
 
@@ -144,8 +146,8 @@ func ApplyTransaction(config *ChainConfig, bc *BlockChain, gp *GasPool, statedb 
 // mining reward. The total reward consists of the static block reward
 // and rewards for included uncles. The coinbase of each uncle block is
 // also rewarded.
+//func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *types.Header, uncles []*types.Header, mns []*common.Address) {
 func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *types.Header, uncles []*types.Header) {
-
 	// An uncle is a block that would be considered an orphan because its not on the longest chain (it's an alternative block at the same height as your parent).
 	// https://www.reddit.com/r/ethereum/comments/3c9jbf/wtf_are_uncles_and_why_do_they_matter/
 
@@ -157,11 +159,23 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	era := GetBlockEra(header.Number, eraLen)
 
 	wr := GetBlockWinnerRewardByEra(era) // wr "winner reward".
-
 	wurs := GetBlockWinnerRewardForUnclesByEra(era, uncles) // wurs "winner uncle rewards"
-	wr.Add(wr, wurs)
+	//mnrs := GetBlockWinnerRewardForMasterNodesByEra(era, mns) // mnrs "masternode rewards"
 
-	statedb.AddBalance(header.Coinbase, wr) // $$
+	wr.Add(wr, wurs)
+	//wr.Add(wr, mnrs)
+
+	// TODO:MN_Updates
+	//if era.Cmp(big.NewInt(100)) == 1 {
+	//	mnr := GetBlockMasterNodeRewardByEra(era, header, mns)
+	//	mnNum := len(mns)
+	//	avr := mnr.Div(mnr, big.NewInt(int64(mnNum)))
+	//	for _, mn := range mns {
+	//		statedb.AddBalance(mn, avr) // $$
+	//	}
+	//}
+
+	statedb.AddBalance(header.Coinbase, wr) // $$w
 
 	// Reward uncle miners.
 	for _, uncle := range uncles {
@@ -179,6 +193,31 @@ func getEraUncleBlockReward(era *big.Int) *big.Int {
 // GetBlockUncleRewardByEra gets called _for each uncle miner_ associated with a winner block's uncles.
 func GetBlockUncleRewardByEra(era *big.Int, header, uncle *types.Header) *big.Int {
 	return getEraUncleBlockReward(era)
+}
+
+// MasterNode miners and winners are rewarded equally for each included block.
+// So they share this function.
+func getEraMasterNodeBlockReward(era *big.Int) *big.Int {
+	r := new(big.Int).Set(OneTenthMaximumBlockReward) // 1 NG
+	if era.Cmp(big.NewInt(100)) == 1 {
+		// after MN, the miner reward will be 1.01**era NG as before
+		// so the remaining reward will belong to MNs
+		var mnq, mnd *big.Int = new(big.Int), new(big.Int)
+
+		mnq.Exp(big.NewInt(101), era, nil)
+		mnd.Exp(big.NewInt(100), era, nil)
+
+		r.Mul(r, mnq)
+		r.Div(r, mnd)
+
+		return r
+	}
+	return big.NewInt(0)
+}
+
+// GetBlockMasterNodeRewardByEra gets called _for each MN miner_ associated with a winner block's uncles.
+func GetBlockMasterNodeRewardByEra(era *big.Int, header, mns []*common.Address) *big.Int {
+	return getEraMasterNodeBlockReward(era)
 }
 
 // GetBlockWinnerRewardForUnclesByEra gets called _per winner_, and accumulates rewards for each included uncle.
@@ -210,6 +249,18 @@ func GetBlockWinnerRewardByEra(era *big.Int) *big.Int {
 
 	r.Mul(MaximumBlockReward, q)
 	r.Div(r, d)
+
+	// TODO:MN_Updates
+	//if era.Cmp(big.NewInt(100)) == 1 {
+	//	// after MN, the miner reward will be 0.6**era times as before
+	//	// so the remaining reward will belong to MNs
+	//	mnr := getEraMasterNodeBlockReward(era)
+	//	if r.Cmp(mnr.Mul(mnr, big.NewInt(2))) > 0 {
+	//		r.Sub(r, mnr)
+	//	}else{
+	//		r = mnr // ensure r >=  mnr
+	//	}
+	//}
 
 	return r
 }

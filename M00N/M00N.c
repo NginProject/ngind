@@ -38,8 +38,8 @@ void do_bmw_hash(const void* input, size_t len, char* output) {
     sph_bmw256_close(&ctx_bmw, output);
 }
 
-void (* const extra_hashes[5])(const void *, size_t, char *) = {
-    do_blake_hash, do_groestl_hash, do_jh_hash, do_skein_hash, do_bmw_hash,
+void (* const extra_hashes[4])(const void *, size_t, char *) = {
+    do_blake_hash, do_groestl_hash, do_jh_hash, do_skein_hash
 };
 
 static void mul_sum_xor_dst(const uint8_t* a, uint8_t* c, uint8_t* dst) {
@@ -103,18 +103,6 @@ void M00N_hash(void *ctx2, const char* input, char* output, uint32_t len) {
         copy_block(ctx->b, ctx->c);
         WAXING_CRESCENT((uint8_t*)
                 &ctx->long_state[e2i(ctx->c) * AES_BLOCK_SIZE]);
-
-        /* Iteration 3 */
-        j = e2i(ctx->a);
-        aesb_single_round(&ctx->long_state[j], ctx->b, ctx->a);
-        xor_blocks_dst(ctx->b, ctx->c, &ctx->long_state[j]);
-        WAXING_GIBBOUS(&ctx->long_state[j * AES_BLOCK_SIZE]);
-
-        /* Iteration 4 */
-        mul_sum_xor_dst(ctx->b, ctx->a, &ctx->long_state[e2i(ctx->b)]);
-        copy_block(ctx->b, ctx->c);
-        FULL_M00N((uint8_t*)
-                &ctx->long_state[e2i(ctx->c) * AES_BLOCK_SIZE]);
     }
 
     memcpy(ctx->text, ctx->state.init, INIT_SIZE_BYTE);
@@ -133,7 +121,7 @@ void M00N_hash(void *ctx2, const char* input, char* output, uint32_t len) {
 
     /*memcpy(hash, &state, 32);*/
 
-    extra_hashes[ctx->state.hs.b[0] & 4](&ctx->state, 200, output);
+    extra_hashes[ctx->state.hs.b[0] & 3](&ctx->state, 200, output);
 
     oaes_free((OAES_CTX **) &ctx->aes_ctx);
 }

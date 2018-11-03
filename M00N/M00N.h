@@ -8,8 +8,8 @@ extern "C" {
 #include <stdint.h>
 #include "hash-ops.h"
 
-#define MEMORY         (1 << 20) /* 1 MiB */
-#define ITER           (1 << 19)
+#define MEMORY         (1 << 21) /* 2 MiB */
+#define ITER           (1 << 20)
 #define AES_BLOCK_SIZE  16
 #define AES_KEY_SIZE    32
 #define INIT_SIZE_BLK   8
@@ -76,7 +76,7 @@ void M00N_hash(void *ctx, const char* input, char* output, uint32_t len);
 void *M00N_create(void);
 void M00N_destroy(void *ctx);
 
-void (* const extra_hashes[5])(const void *, size_t, char *);
+void (* const extra_hashes[4])(const void *, size_t, char *);
 
 #ifdef __cplusplus
 }
