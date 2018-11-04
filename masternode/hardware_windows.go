@@ -45,7 +45,7 @@ func GetStartTime() string {
 	return ms.String()
 }
 
-func getFreeStorage() uint64 {
+func GetFreeStorage() uint64 {
 	var storageInfo []storageInfo
 	//var loaclStorageList []Storage
 	err := wmi.Query("Select * from Win32_LogicalDisk", &storageInfo)

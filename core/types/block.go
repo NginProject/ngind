@@ -57,8 +57,8 @@ func (n BlockNonce) MarshalJSON() ([]byte, error) {
 }
 
 type Header struct {
-	ParentHash  common.Hash    // Hash to the previous block
-	UncleHash   common.Hash    // Uncles of this block
+	ParentHash common.Hash // Hash to the previous block
+	UncleHash  common.Hash // Uncles of this block
 	// MasterNodeHash common.Hash // MNs of this block // TODO：MN_Updates
 	Coinbase    common.Address // The coin base address
 	Root        common.Hash    // Block Trie state
@@ -143,8 +143,8 @@ type Body struct {
 }
 
 type Block struct {
-	header       *Header
-	uncles       []*Header
+	header *Header
+	uncles []*Header
 	// masterNodes []*common.Address
 	transactions Transactions
 

@@ -2,6 +2,7 @@ module github.com/NginProject/ngind
 
 require (
 	github.com/NginProject/sputnikvm-ffi v0.0.0-20180910131407-7b0cdf94d93f
+	github.com/StackExchange/wmi v0.0.0-20180725035823-b12b22c5341f
 	github.com/boltdb/bolt v1.3.1
 	github.com/davecgh/go-spew v1.1.0
 	github.com/denisbrodbeck/machineid v1.0.0
@@ -9,6 +10,7 @@ require (
 	github.com/fatih/color v1.7.0
 	github.com/fsnotify/fsnotify v1.4.7 // indirect
 	github.com/gizak/termui v2.2.0+incompatible
+	github.com/go-ole/go-ole v1.2.1 // indirect
 	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
 	github.com/hashicorp/golang-lru v0.5.0

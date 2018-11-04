@@ -24,8 +24,8 @@ import (
 	"github.com/NginProject/ngind/core"
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
+	"github.com/NginProject/ngind/ngindb"
 )
 
 // This nil assignment ensures compile time that SimulatedBackend implements bind.ContractBackend.

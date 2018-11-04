@@ -35,19 +35,18 @@ import (
 	"github.com/NginProject/ngind/common/registrar/ethreg"
 	"github.com/NginProject/ngind/core"
 	"github.com/NginProject/ngind/core/types"
-	"github.com/NginProject/ngind/ngin/downloader"
-	"github.com/NginProject/ngind/ngin/filters"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
 	"github.com/NginProject/ngind/miner"
+	"github.com/NginProject/ngind/ngin/downloader"
+	"github.com/NginProject/ngind/ngin/filters"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/node"
 	"github.com/NginProject/ngind/p2p"
 	"github.com/NginProject/ngind/rlp"
 	"github.com/NginProject/ngind/rpc"
 )
-
 
 type Config struct {
 	ChainConfig *core.ChainConfig // chain configuration
@@ -185,23 +184,23 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 	glog.V(logger.Info).Infof("Blockchain DB Version: %d", config.BlockChainVersion)
 
 	ngin := &Ngin{
-		config:            config,
-		shutdownChan:      make(chan bool),
-		chainDb:           chainDb,
-		dappDb:            dappDb,
-		eventMux:          ctx.EventMux,
-		accountManager:    config.AccountManager,
-		coinbase:          config.Coinbase,
-		netVersionId:      config.NetworkId,
-		NatSpec:           config.NatSpec,
-		MinerThreads:      config.MinerThreads,
-		SolcPath:          config.SolcPath,
-		PowTest:           config.PowTest,
-		GpoMinGasPrice:    config.GpoMinGasPrice,
-		GpoMaxGasPrice:    config.GpoMaxGasPrice,
-		GpoFullBlockRatio: config.GpoFullBlockRatio,
-		GpobaseStepDown:   config.GpobaseStepDown,
-		GpobaseStepUp:     config.GpobaseStepUp,
+		config:                  config,
+		shutdownChan:            make(chan bool),
+		chainDb:                 chainDb,
+		dappDb:                  dappDb,
+		eventMux:                ctx.EventMux,
+		accountManager:          config.AccountManager,
+		coinbase:                config.Coinbase,
+		netVersionId:            config.NetworkId,
+		NatSpec:                 config.NatSpec,
+		MinerThreads:            config.MinerThreads,
+		SolcPath:                config.SolcPath,
+		PowTest:                 config.PowTest,
+		GpoMinGasPrice:          config.GpoMinGasPrice,
+		GpoMaxGasPrice:          config.GpoMaxGasPrice,
+		GpoFullBlockRatio:       config.GpoFullBlockRatio,
+		GpobaseStepDown:         config.GpobaseStepDown,
+		GpobaseStepUp:           config.GpobaseStepUp,
 		GpobaseCorrectionFactor: config.GpobaseCorrectionFactor,
 		httpclient:              httpclient.New(config.DocRoot),
 	}

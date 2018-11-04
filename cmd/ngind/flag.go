@@ -38,12 +38,12 @@ import (
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/crypto"
-	"github.com/NginProject/ngind/ngin"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
 	"github.com/NginProject/ngind/miner"
+	"github.com/NginProject/ngind/ngin"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/node"
 	"github.com/NginProject/ngind/p2p/discover"
 	"github.com/NginProject/ngind/p2p/nat"
@@ -339,7 +339,7 @@ func MakeRPCModules(ctx *cli.Context, input string) []string {
 
 	if ctx.GlobalIsSet(MasternodeFlag.Name) {
 		return append(result, "net")
-	}else{
+	} else {
 		return result
 	}
 }
@@ -599,23 +599,23 @@ func mustMakeEthConf(ctx *cli.Context, sconf *core.SufficientChainConfig) *ngin.
 	ethConf := &ngin.Config{
 		ChainConfig:             sconf.ChainConfig,
 		Genesis:                 sconf.Genesis,
-		UseAddrTxIndex:    ctx.GlobalBool(aliasableName(AddrTxIndexFlag.Name, ctx)),
-		FastSync:          ctx.GlobalBool(aliasableName(FastSyncFlag.Name, ctx)),
-		BlockChainVersion: ctx.GlobalInt(aliasableName(BlockchainVersionFlag.Name, ctx)),
-		DatabaseCache:     ctx.GlobalInt(aliasableName(CacheFlag.Name, ctx)),
-		DatabaseHandles:   MakeDatabaseHandles(),
-		NetworkId:         sconf.Network,
-		MaxPeers:          ctx.GlobalInt(aliasableName(MaxPeersFlag.Name, ctx)),
-		AccountManager:    accman,
-		Coinbase:          MakeCoinbase(accman, ctx),
-		MinerThreads:      ctx.GlobalInt(aliasableName(MinerThreadsFlag.Name, ctx)),
-		NatSpec:           ctx.GlobalBool(aliasableName(NatspecEnabledFlag.Name, ctx)),
-		DocRoot:           ctx.GlobalString(aliasableName(DocRootFlag.Name, ctx)),
-		GasPrice:          new(big.Int),
-		GpoMinGasPrice:    new(big.Int),
-		GpoMaxGasPrice:    new(big.Int),
-		GpoFullBlockRatio: ctx.GlobalInt(aliasableName(GpoFullBlockRatioFlag.Name, ctx)),
-		GpobaseStepDown:   ctx.GlobalInt(aliasableName(GpobaseStepDownFlag.Name, ctx)),
+		UseAddrTxIndex:          ctx.GlobalBool(aliasableName(AddrTxIndexFlag.Name, ctx)),
+		FastSync:                ctx.GlobalBool(aliasableName(FastSyncFlag.Name, ctx)),
+		BlockChainVersion:       ctx.GlobalInt(aliasableName(BlockchainVersionFlag.Name, ctx)),
+		DatabaseCache:           ctx.GlobalInt(aliasableName(CacheFlag.Name, ctx)),
+		DatabaseHandles:         MakeDatabaseHandles(),
+		NetworkId:               sconf.Network,
+		MaxPeers:                ctx.GlobalInt(aliasableName(MaxPeersFlag.Name, ctx)),
+		AccountManager:          accman,
+		Coinbase:                MakeCoinbase(accman, ctx),
+		MinerThreads:            ctx.GlobalInt(aliasableName(MinerThreadsFlag.Name, ctx)),
+		NatSpec:                 ctx.GlobalBool(aliasableName(NatspecEnabledFlag.Name, ctx)),
+		DocRoot:                 ctx.GlobalString(aliasableName(DocRootFlag.Name, ctx)),
+		GasPrice:                new(big.Int),
+		GpoMinGasPrice:          new(big.Int),
+		GpoMaxGasPrice:          new(big.Int),
+		GpoFullBlockRatio:       ctx.GlobalInt(aliasableName(GpoFullBlockRatioFlag.Name, ctx)),
+		GpobaseStepDown:         ctx.GlobalInt(aliasableName(GpobaseStepDownFlag.Name, ctx)),
 		GpobaseStepUp:           ctx.GlobalInt(aliasableName(GpobaseStepUpFlag.Name, ctx)),
 		GpobaseCorrectionFactor: ctx.GlobalInt(aliasableName(GpobaseCorrectionFactorFlag.Name, ctx)),
 		SolcPath:                ctx.GlobalString(aliasableName(SolcPathFlag.Name, ctx)),

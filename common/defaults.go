@@ -24,10 +24,10 @@ import (
 
 const (
 	DefaultIPCSocket = "ngind.ipc" // Default (relative) name of the IPC RPC socket
-	DefaultHTTPHost  = "localhost"     // Default host interface for the HTTP RPC server
-	DefaultHTTPPort  = 52521           // Default TCP port for the HTTP RPC server // TODO: Config
-	DefaultWSHost    = "localhost"     // Default host interface for the websocket RPC server
-	DefaultWSPort    = 52522           // Default TCP port for the websocket RPC server // TODO: Config
+	DefaultHTTPHost  = "localhost" // Default host interface for the HTTP RPC server
+	DefaultHTTPPort  = 52521       // Default TCP port for the HTTP RPC server // TODO: Config
+	DefaultWSHost    = "localhost" // Default host interface for the websocket RPC server
+	DefaultWSPort    = 52522       // Default TCP port for the websocket RPC server // TODO: Config
 )
 
 func defaultDataDirParent() string {

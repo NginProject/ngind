@@ -39,9 +39,9 @@ import (
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/core/vm"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/p2p/discover"
 )
 
@@ -67,7 +67,7 @@ var (
 		"mainnet": true,
 	}
 	ChainIdentitiesTestnet = map[string]bool{
-		"test":  true,
+		"test":    true,
 		"testnet": true,
 	}
 
@@ -211,7 +211,7 @@ func (c *SufficientChainConfig) IsValid() (string, bool) {
 		return "networkId", false
 	}
 
-	if c := c.Consensus; c == ""{
+	if c := c.Consensus; c == "" {
 		return "consensus", false
 	}
 

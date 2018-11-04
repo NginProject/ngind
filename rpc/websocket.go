@@ -26,8 +26,8 @@ import (
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
 
-	"gopkg.in/fatih/set.v0"
 	"golang.org/x/net/websocket"
+	"gopkg.in/fatih/set.v0"
 )
 
 // wsReaderWriterCloser reads and write payloads from and to a websocket  connection.

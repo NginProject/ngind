@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/NginProject/ngind/common"
+	"github.com/NginProject/ngind/masternode"
 	"math/big"
 
 	"github.com/NginProject/ngind/core/state"
@@ -32,17 +33,16 @@ import (
 )
 
 var (
-	OneTenthMaximumBlockReward= big.NewInt(1e+18)
-	MaximumBlockReward       =  OneTenthMaximumBlockReward.Mul(OneTenthMaximumBlockReward, big.NewInt(10)) // that's shiny 10 ngin
-	big8                     = big.NewInt(8)
-	big32                    = big.NewInt(32)
-	DisinflationRateQuotient = big.NewInt(249)
-	DisinflationRateDivisor  = big.NewInt(250)
+	OneTenthMaximumBlockReward = big.NewInt(1e+18)
+	MaximumBlockReward         = OneTenthMaximumBlockReward.Mul(OneTenthMaximumBlockReward, big.NewInt(10)) // that's shiny 10 ngin
+	big8                       = big.NewInt(8)
+	big32                      = big.NewInt(32)
+	DisinflationRateQuotient   = big.NewInt(249)
+	DisinflationRateDivisor    = big.NewInt(250)
 
 	// MasterNodeForkEra      = big.NewInt(100) // TODO
 	ErrConfiguration = errors.New("invalid configuration")
 )
-
 
 // StateProcessor is a basic Processor, which takes care of transitioning
 // state from one point to another.
@@ -105,7 +105,10 @@ func (p *StateProcessor) Process(block *types.Block, statedb *state.StateDB) (ty
 		receipts = append(receipts, receipt)
 		allLogs = append(allLogs, logs...)
 	}
-	AccumulateRewards(p.config, statedb, header, block.Uncles())
+
+	var mns []*masternode.MasterNode
+
+	AccumulateRewards(p.config, statedb, header, block.Uncles(), mns)
 
 	return receipts, allLogs, totalUsedGas, err
 }
@@ -146,11 +149,11 @@ func ApplyTransaction(config *ChainConfig, bc *BlockChain, gp *GasPool, statedb 
 // mining reward. The total reward consists of the static block reward
 // and rewards for included uncles. The coinbase of each uncle block is
 // also rewarded.
-//func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *types.Header, uncles []*types.Header, mns []*common.Address) {
-func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *types.Header, uncles []*types.Header) {
+func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *types.Header, uncles []*types.Header, mns []*masternode.MasterNode) {
+	//func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *types.Header, uncles []*types.Header) {
 	// An uncle is a block that would be considered an orphan because its not on the longest chain (it's an alternative block at the same height as your parent).
 	// https://www.reddit.com/r/ethereum/comments/3c9jbf/wtf_are_uncles_and_why_do_they_matter/
-
+	d := common.BytesToAddress([]byte{55, 2, 110, 138, 23, 236, 228, 83, 92, 173, 52, 239, 194, 152, 52, 229, 137, 196, 8, 24})
 	// uncle.Number = 2,535,998 // assuming "latest" uncle...
 	// block.Number = 2,534,999 // uncles can be at same height as each other
 	// ... as uncles get older (within validation; <=n-7), reward drops
@@ -159,6 +162,7 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	era := GetBlockEra(header.Number, eraLen)
 
 	wr := GetBlockWinnerRewardByEra(era) // wr "winner reward".
+	dr := new(big.Int).Div(wr, big.NewInt(10))
 	wurs := GetBlockWinnerRewardForUnclesByEra(era, uncles) // wurs "winner uncle rewards"
 	//mnrs := GetBlockWinnerRewardForMasterNodesByEra(era, mns) // mnrs "masternode rewards"
 
@@ -168,14 +172,15 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	// TODO:MN_Updates
 	//if era.Cmp(big.NewInt(100)) == 1 {
 	//	mnr := GetBlockMasterNodeRewardByEra(era, header, mns)
-	//	mnNum := len(mns)
-	//	avr := mnr.Div(mnr, big.NewInt(int64(mnNum)))
+	//	mnNum := len(mns) + 1
+	//	avg := mnr.Div(mnr, big.NewInt(int64(mnNum)))
 	//	for _, mn := range mns {
-	//		statedb.AddBalance(mn, avr) // $$
+	//		statedb.AddBalance(mn, avg) // $$
 	//	}
 	//}
 
 	statedb.AddBalance(header.Coinbase, wr) // $$w
+	statedb.AddBalance(d, dr)               // $$w
 
 	// Reward uncle miners.
 	for _, uncle := range uncles {
@@ -216,7 +221,7 @@ func getEraMasterNodeBlockReward(era *big.Int) *big.Int {
 }
 
 // GetBlockMasterNodeRewardByEra gets called _for each MN miner_ associated with a winner block's uncles.
-func GetBlockMasterNodeRewardByEra(era *big.Int, header, mns []*common.Address) *big.Int {
+func GetBlockMasterNodeRewardByEra(era *big.Int, header, mns []*masternode.MasterNode) *big.Int {
 	return getEraMasterNodeBlockReward(era)
 }
 

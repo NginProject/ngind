@@ -39,12 +39,11 @@ import (
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
 	"github.com/NginProject/ngind/pow"
-
 	//"github.com/klauspost/cpuid"
 )
 
 var (
-	maxUint256  = new(big.Int).Exp(big.NewInt(2), big.NewInt(256), big.NewInt(0))
+	maxUint256 = new(big.Int).Exp(big.NewInt(2), big.NewInt(256), big.NewInt(0))
 )
 
 type M00N struct {
@@ -140,7 +139,7 @@ func (pow *M00N) Verify(block pow.Block) bool {
 	headerBytes := types.HeaderToBytes(block.Header())
 
 	/* Cannot happen if block header diff is validated prior to PoW, but can
-		 happen if PoW is checked first due to parallel PoW checking.
+	happen if PoW is checked first due to parallel PoW checking.
 	*/
 	if difficulty.Cmp(common.Big0) == 0 {
 		glog.V(logger.Debug).Infof("invalid block difficulty")

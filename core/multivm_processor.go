@@ -5,7 +5,6 @@ package core
 import (
 	"math/big"
 
-	"github.com/NginProject/sputnikvm-ffi/go/sputnikvm"
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
@@ -13,6 +12,7 @@ import (
 	"github.com/NginProject/ngind/crypto"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/sputnikvm-ffi/go/sputnikvm"
 )
 
 const SputnikVMExists = true

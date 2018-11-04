@@ -44,12 +44,12 @@ import (
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	metrics "github.com/NginProject/ngind/metrics"
 	"github.com/NginProject/ngind/miner"
 	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/p2p"
 	"github.com/NginProject/ngind/rlp"
 	"github.com/NginProject/ngind/rpc"
-	metrics "github.com/NginProject/ngind/metrics"
 )
 
 const defaultGas = uint64(90000)
@@ -1658,6 +1658,7 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 	}
 	return true, nil
 }
+
 // PublicDebugAPI is the collection of Etheruem APIs exposed over the public
 // debugging endpoint.
 type PublicNgindAPI struct {

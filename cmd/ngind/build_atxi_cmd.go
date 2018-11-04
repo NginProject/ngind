@@ -4,8 +4,8 @@ import (
 	"math"
 
 	"github.com/NginProject/ngind/core"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 	"gopkg.in/urfave/cli.v1"
 )
 

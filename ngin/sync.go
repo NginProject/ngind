@@ -23,9 +23,9 @@ import (
 
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core/types"
-	"github.com/NginProject/ngind/ngin/downloader"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngin/downloader"
 	"github.com/NginProject/ngind/p2p/discover"
 )
 

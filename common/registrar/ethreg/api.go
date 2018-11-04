@@ -30,9 +30,9 @@ import (
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/crypto"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 )
 
 // registryAPIBackend is a backend for an Ethereum Registry.
