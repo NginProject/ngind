@@ -21,6 +21,7 @@ package downloader
 import (
 	"errors"
 	"fmt"
+	"github.com/NginProject/ngind/protocol"
 	"math/big"
 	"sync"
 	"sync/atomic"
@@ -167,15 +168,15 @@ type Downloader struct {
 	// Channels
 	headerCh      chan dataPack        // [ngin/62] Channel receiving inbound block headers
 	bodyCh        chan dataPack        // [ngin/62] Channel receiving inbound block bodies
-	receiptCh     chan dataPack        // [ngin/63] Channel receiving inbound receipts
+	receiptCh     chan dataPack        // [ngin/62] Channel receiving inbound receipts
 	bodyWakeCh    chan bool            // [ngin/62] Channel to signal the block body fetcher of new tasks
-	receiptWakeCh chan bool            // [ngin/63] Channel to signal the receipt fetcher of new tasks
+	receiptWakeCh chan bool            // [ngin/62] Channel to signal the receipt fetcher of new tasks
 	headerProcCh  chan []*types.Header // [ngin/62] Channel to feed the header processor new tasks
 
 	// for stateFetcher
 	stateSyncStart chan *stateSync
 	trackStateReq  chan *stateReq
-	stateCh        chan dataPack // [ngin/63] Channel receiving inbound node state data
+	stateCh        chan dataPack // [ngin/62] Channel receiving inbound node state data
 
 	// Cancellation and termination
 	cancelPeer string         // Identifier of the peer currently being used as the master (cancel on drop)
@@ -515,7 +516,7 @@ func (d *Downloader) syncWithPeer(p *peer, hash common.Hash, td *big.Int) (err e
 		}
 	}(time.Now())
 
-	if p.version < 62 {
+	if p.version < protocol.Ng62 { // TODO:Edit_On_Upgrade
 		glog.V(logger.Debug).Warnf("download: peer %q protocol %d too old", p.id, p.version)
 		return errTooOld
 	}

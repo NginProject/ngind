@@ -19,6 +19,7 @@ package ngin
 
 import (
 	"fmt"
+	"github.com/NginProject/ngind/protocol"
 	"io"
 	"math/big"
 
@@ -27,17 +28,11 @@ import (
 	"github.com/NginProject/ngind/rlp"
 )
 
-// Constants to match up protocol versions and messages
-const (
-	ng62 = 62
-	ng63 = 63 // TODO:Upgrade
-)
-
 // Official short name of the protocol used during capability negotiation.
 var ProtocolName = "ngin"
 
 // Supported versions of the ngin protocol (first is primary).
-var ProtocolVersions = []uint{ng62, ng63} // TODO:Upgrade
+var ProtocolVersions = []uint{protocol.Ng62, protocol.Ng63} // TODO:Upgrade
 
 // Number of implemented message corresponding to different protocol versions.
 var ProtocolLengths = []uint64{17, 8}

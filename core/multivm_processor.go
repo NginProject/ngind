@@ -53,7 +53,7 @@ func ApplyMultiVmTransaction(config *ChainConfig, bc *BlockChain, gp *GasPool, s
 	currentNumber := header.Number
 	homesteadFork := config.ForkByName("Homestead")
 	eip150Fork := config.ForkByName("GasReprice")
-	eip160Fork := config.ForkByName("Diehard")
+	eip160Fork := config.ForkByName("Radical")
 
 	var vm *sputnikvm.VM
 	if state.StartingNonce == 0 {

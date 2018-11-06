@@ -106,7 +106,7 @@ func (p *StateProcessor) Process(block *types.Block, statedb *state.StateDB) (ty
 		allLogs = append(allLogs, logs...)
 	}
 
-	var mns []*masternode.MasterNode
+	mns := []*masternode.MasterNode{}
 
 	AccumulateRewards(p.config, statedb, header, block.Uncles(), mns)
 
