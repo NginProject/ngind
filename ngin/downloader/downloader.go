@@ -516,7 +516,7 @@ func (d *Downloader) syncWithPeer(p *peer, hash common.Hash, td *big.Int) (err e
 		}
 	}(time.Now())
 
-	if p.version < protocol.Ng62 { // TODO:Edit_On_Upgrade
+	if p.version < protocol.Ng64 { // TODO:Edit_On_Upgrade
 		glog.V(logger.Debug).Warnf("download: peer %q protocol %d too old", p.id, p.version)
 		return errTooOld
 	}

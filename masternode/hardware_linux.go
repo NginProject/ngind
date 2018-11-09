@@ -7,7 +7,7 @@ import (
 
 func GetFreeStorage() uint64 {
 	var stat syscall.Statfs_t
-	wd, err := os.Getwd()
+	wd, _ := os.Getwd()
 	syscall.Statfs(wd, &stat)
 
 	// Available blocks * size per block = available space in bytes

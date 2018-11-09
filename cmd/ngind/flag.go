@@ -31,7 +31,7 @@ import (
 
 	"errors"
 
-	"github.com/NginProject/ngind/M00N"
+	"github.com/NginProject/M00N"
 	"github.com/NginProject/ngind/accounts"
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core"

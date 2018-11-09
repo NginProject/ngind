@@ -32,7 +32,7 @@ import (
 var ProtocolName = "ngin"
 
 // Supported versions of the ngin protocol (first is primary).
-var ProtocolVersions = []uint{protocol.Ng62, protocol.Ng63} // TODO:Upgrade
+var ProtocolVersions = []uint{protocol.Ng64, protocol.Ng65} // TODO:Upgrade
 
 // Number of implemented message corresponding to different protocol versions.
 var ProtocolLengths = []uint64{17, 8}

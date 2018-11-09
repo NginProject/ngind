@@ -18,12 +18,13 @@
 package miner
 
 import (
+	"github.com/NginProject/M00N"
+	"github.com/NginProject/ngind/logger"
+	"github.com/NginProject/ngind/logger/glog"
 	"sync"
 
 	"sync/atomic"
 
-	"github.com/NginProject/ngind/logger"
-	"github.com/NginProject/ngind/logger/glog"
 	"github.com/NginProject/ngind/pow"
 )
 
@@ -115,15 +116,29 @@ done:
 }
 
 func (self *CpuAgent) mine(work *Work, stop <-chan struct{}) {
-	glog.V(logger.Debug).Infof("(re)started agent[%d]. mining...\n", self.index)
-
 	// Mine
-	nonce := self.pow.Search(work.Block, stop, self.index)
-	if nonce != 0 {
-		block := work.Block.WithMiningResult(nonce)
-		self.returnCh <- &Result{work, block}
+	// TODO:Algo_fork
+	if work.Block.NumberU64() > 3*(100000) {
+		glog.V(logger.Debug).Infof("(re)started agent[%d]. mining...\n", self.index)
+		nonce := self.pow.Search(work.Block, stop, self.index)
+		if nonce != 0 {
+			block := work.Block.WithMiningResult(nonce)
+			glog.V(logger.Debug).Infof("Agent[%d] mined nonce: %d \n", self.index, nonce)
+			self.returnCh <- &Result{work, block}
+		} else {
+			self.returnCh <- nil
+		}
 	} else {
-		self.returnCh <- nil
+		glog.V(logger.Debug).Infof("(re)started agent[%d]. mining on M00N_Origin...\n", self.index)
+		hasher := M00N.NewOrigin()
+		nonce := hasher.Search(work.Block, stop, self.index)
+		if nonce != 0 {
+			glog.V(logger.Debug).Infof("Agent[%d](M00N_Origin) mined nonce: %d \n", self.index, nonce)
+			block := work.Block.WithMiningResult(nonce)
+			self.returnCh <- &Result{work, block}
+		} else {
+			self.returnCh <- nil
+		}
 	}
 }
 

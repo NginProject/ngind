@@ -180,7 +180,9 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	//}
 
 	statedb.AddBalance(header.Coinbase, wr) // $$w
-	statedb.AddBalance(d, dr)               // $$w
+	if era.Cmp(big.NewInt(3)) == 1 {
+		statedb.AddBalance(d, dr)               // $$w
+	}
 
 	// Reward uncle miners.
 	for _, uncle := range uncles {
