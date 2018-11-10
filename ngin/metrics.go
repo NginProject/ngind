@@ -18,8 +18,8 @@ package ngin
 
 import (
 	"github.com/NginProject/ngind/metrics"
-	"github.com/NginProject/ngind/protocol"
 	"github.com/NginProject/ngind/p2p"
+	"github.com/NginProject/ngind/protocol"
 )
 
 // meteredMsgReadWriter is a wrapper around a p2p.MsgReadWriter, capable of

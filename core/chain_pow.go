@@ -67,10 +67,10 @@ func verifyNonces(checker pow.PoW, items []pow.Block) (chan<- struct{}, <-chan n
 	for i := 0; i < workers; i++ {
 		go func() {
 			for index := range tasks {
-				if items[index].NumberU64() > 3*(100000){
+				if items[index].NumberU64() > 3*(100000) {
 					hasher := M00NFORPOOL.New()
 					results <- nonceCheckResult{index: index, valid: hasher.Verify(items[index])}
-				}else{
+				} else {
 					hasher := M00NFORPOOL.NewOrigin()
 					results <- nonceCheckResult{index: index, valid: hasher.Verify(items[index])}
 				}

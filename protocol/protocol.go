@@ -2,6 +2,6 @@ package protocol
 
 // Constants to match up protocol versions and messages
 const (
-	Ng64 = 62
-	Ng65 = 63 // TODO:Upgrade
+	Ng64 = 64
+	Ng65 = 65 // TODO:Upgrade
 )

@@ -264,7 +264,7 @@ func ValidateHeader(config *ChainConfig, pow pow.PoW, header *types.Header, pare
 			if !hasher.Verify(types.NewBlockWithHeader(header)) {
 				return &BlockNonceErr{header.Number, header.Hash(), header.Nonce.Uint64()}
 			}
-		}else{
+		} else {
 			hasher := M00NFORPOOL.NewOrigin()
 			// Verify the nonce of the header. Return an error if it's not valid
 			if !hasher.Verify(types.NewBlockWithHeader(header)) {
