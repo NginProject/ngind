@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 	"reflect"
 
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/p2p"
 	"github.com/NginProject/ngind/rpc"
 )

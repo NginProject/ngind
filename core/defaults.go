@@ -6,7 +6,7 @@ import (
 
 var (
 	DefaultConfigMainnet *SufficientChainConfig
-	DefaultConfigTestnet  *SufficientChainConfig
+	DefaultConfigTestnet *SufficientChainConfig
 )
 
 func init() {

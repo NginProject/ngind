@@ -33,15 +33,15 @@ import (
 
 	"math"
 
-	"github.com/NginProject/ngind/M00N"
+	"github.com/NginProject/M00N"
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core"
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
-	"github.com/NginProject/ngind/ngin"
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngin"
 	"github.com/NginProject/ngind/node"
 	"github.com/NginProject/ngind/pow"
 	"github.com/NginProject/ngind/rlp"

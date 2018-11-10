@@ -34,8 +34,8 @@ import (
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/core/vm"
 	"github.com/NginProject/ngind/crypto"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 )
 
 // Version is the application revision identifier. It can be set with the linker

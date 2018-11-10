@@ -29,8 +29,8 @@ import (
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/core/vm"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/rpc"
 )
 

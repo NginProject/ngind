@@ -44,7 +44,7 @@ import (
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
-	ngMetrics "github.com/NginProject/ngind/metrics"
+	metrics "github.com/NginProject/ngind/metrics"
 	"github.com/NginProject/ngind/miner"
 	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/p2p"
@@ -1661,33 +1661,33 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 
 // PublicDebugAPI is the collection of Etheruem APIs exposed over the public
 // debugging endpoint.
-type PublicNginAPI struct {
+type PublicNgindAPI struct {
 	ngin *Ngin
 }
 
 // NewPublicDebugAPI creates a new API definition for the public debug methods
-// of the Ngin service.
-func NewPublicNginAPI(ngin *Ngin) *PublicNginAPI {
-	return &PublicNginAPI{ngin: ngin}
+// of the Ethereum service.
+func NewPublicNgindAPI(ngin *Ngin) *PublicNgindAPI {
+	return &PublicNgindAPI{ngin: ngin}
 }
 
 // GetTransactionsByAddress is an alias for GetAddressTransactions which aligns more closely
 // with established ngin_transaction api namespace
-func (api *PublicNginAPI) GetTransactionsByAddress(address common.Address, blockStartN uint64, blockEndN rpc.BlockNumber, toOrFrom string, txKindOf string, pagStart, pagEnd int, reverse bool) (list []string, err error) {
+func (api *PublicNgindAPI) GetTransactionsByAddress(address common.Address, blockStartN uint64, blockEndN rpc.BlockNumber, toOrFrom string, txKindOf string, pagStart, pagEnd int, reverse bool) (list []string, err error) {
 	return api.GetAddressTransactions(address, blockStartN, blockEndN, toOrFrom, txKindOf, pagStart, pagEnd, reverse)
 }
 
 // AddressTransactions gets transactions for a given address.
 // Optional values include start and stop block numbers, and to/from/both value for tx/address relation.
 // Returns a slice of strings of transactions hashes.
-func (api *PublicNginAPI) GetAddressTransactions(address common.Address, blockStartN uint64, blockEndN rpc.BlockNumber, toOrFrom string, txKindOf string, pagStart, pagEnd int, reverse bool) (list []string, err error) {
+func (api *PublicNgindAPI) GetAddressTransactions(address common.Address, blockStartN uint64, blockEndN rpc.BlockNumber, toOrFrom string, txKindOf string, pagStart, pagEnd int, reverse bool) (list []string, err error) {
 	glog.V(logger.Debug).Infoln("RPC call: debug_getAddressTransactions %s %d %d %s %s", address, blockStartN, blockEndN, toOrFrom, txKindOf)
 
 	atxi := api.ngin.BlockChain().GetAtxi()
 	if atxi == nil {
 		return nil, errors.New("addr-tx indexing not enabled")
 	}
-	// Use human-friendly abbreviations, per https://github.com/NginProject/ngind/pull/475#issuecomment-366065122
+	// Use human-friendly abbreviations, per https://github.com/ethereumproject/go-ethereum/pull/475#issuecomment-366065122
 	// so 't' => to, 'f' => from, 'tf|ft' => either/both. Same pattern for txKindOf.
 	// _t_o OR _f_rom
 	if toOrFrom == "tf" || toOrFrom == "ft" {
@@ -1715,7 +1715,7 @@ func (api *PublicNginAPI) GetAddressTransactions(address common.Address, blockSt
 	return list, nil
 }
 
-func (api *PublicNginAPI) BuildATXI(start, stop, step rpc.BlockNumber) (bool, error) {
+func (api *PublicNgindAPI) BuildATXI(start, stop, step rpc.BlockNumber) (bool, error) {
 	glog.V(logger.Debug).Infoln("RPC call: ngin_buildATXI %v %v %v", start, stop, step)
 
 	convert := func(number rpc.BlockNumber) uint64 {
@@ -1748,7 +1748,7 @@ func (api *PublicNginAPI) BuildATXI(start, stop, step rpc.BlockNumber) (bool, er
 	return true, nil
 }
 
-func (api *PublicNginAPI) GetATXIBuildStatus() (*core.AtxiProgressT, error) {
+func (api *PublicNgindAPI) GetATXIBuildStatus() (*core.AtxiProgressT, error) {
 	atxi := api.ngin.BlockChain().GetAtxi()
 	if atxi == nil {
 		return nil, errors.New("addr-tx indexing not enabled")
@@ -1774,7 +1774,7 @@ type PublicDebugAPI struct {
 }
 
 // NewPublicDebugAPI creates a new API definition for the public debug methods
-// of the Ngin service.
+// of the Ethereum service.
 func NewPublicDebugAPI(ngin *Ngin) *PublicDebugAPI {
 	return &PublicDebugAPI{ngin: ngin}
 }
@@ -1836,7 +1836,7 @@ func (api *PublicDebugAPI) SetHead(number uint64) (bool, error) {
 }
 
 // Metrics return all available registered metrics for the client.
-// See https://github.com/NginProject/ngind/wiki/Metrics-and-Monitoring for prophetic documentation.
+// See https://github.com/ethereumproject/go-ethereum/wiki/Metrics-and-Monitoring for prophetic documentation.
 func (api *PublicDebugAPI) Metrics(raw bool) (map[string]interface{}, error) {
 
 	// Create a rate formatter
@@ -1855,7 +1855,7 @@ func (api *PublicDebugAPI) Metrics(raw bool) (map[string]interface{}, error) {
 	var b []byte
 	var err error
 
-	b, err = ngMetrics.CollectToJSON()
+	b, err = metrics.CollectToJSON()
 	if err != nil {
 		return nil, err
 	}

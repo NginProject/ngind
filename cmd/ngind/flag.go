@@ -31,19 +31,19 @@ import (
 
 	"errors"
 
-	"github.com/NginProject/ngind/M00N"
+	"github.com/NginProject/M00N"
 	"github.com/NginProject/ngind/accounts"
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core"
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/crypto"
-	"github.com/NginProject/ngind/ngin"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
 	"github.com/NginProject/ngind/miner"
+	"github.com/NginProject/ngind/ngin"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/node"
 	"github.com/NginProject/ngind/p2p/discover"
 	"github.com/NginProject/ngind/p2p/nat"
@@ -331,17 +331,25 @@ func MakeNAT(ctx *cli.Context) nat.Interface {
 
 // MakeRPCModules splits input separated by a comma and trims excessive white
 // space from the substrings.
-func MakeRPCModules(input string) []string {
+func MakeRPCModules(ctx *cli.Context, input string) []string {
 	result := strings.Split(input, ",")
 	for i, r := range result {
 		result[i] = strings.TrimSpace(r)
 	}
-	return result
+
+	if ctx.GlobalIsSet(MasternodeFlag.Name) {
+		return append(result, "net")
+	} else {
+		return result
+	}
 }
 
 // MakeHTTPRpcHost creates the HTTP RPC listener interface string from the set
 // command line flags, returning empty if the HTTP endpoint is disabled.
 func MakeHTTPRpcHost(ctx *cli.Context) string {
+	if ctx.GlobalIsSet(MasternodeFlag.Name) {
+		return "0.0.0.0"
+	}
 	if !ctx.GlobalBool(aliasableName(RPCEnabledFlag.Name, ctx)) {
 		return ""
 	}
@@ -546,11 +554,11 @@ func mustMakeStackConf(ctx *cli.Context, name string, config *core.SufficientCha
 		HTTPHost:        MakeHTTPRpcHost(ctx),
 		HTTPPort:        ctx.GlobalInt(aliasableName(RPCPortFlag.Name, ctx)),
 		HTTPCors:        ctx.GlobalString(aliasableName(RPCCORSDomainFlag.Name, ctx)),
-		HTTPModules:     MakeRPCModules(ctx.GlobalString(aliasableName(RPCApiFlag.Name, ctx))),
+		HTTPModules:     MakeRPCModules(ctx, ctx.GlobalString(aliasableName(RPCApiFlag.Name, ctx))),
 		WSHost:          MakeWSRpcHost(ctx),
 		WSPort:          ctx.GlobalInt(aliasableName(WSPortFlag.Name, ctx)),
 		WSOrigins:       ctx.GlobalString(aliasableName(WSAllowedOriginsFlag.Name, ctx)),
-		WSModules:       MakeRPCModules(ctx.GlobalString(aliasableName(WSApiFlag.Name, ctx))),
+		WSModules:       MakeRPCModules(ctx, ctx.GlobalString(aliasableName(WSApiFlag.Name, ctx))),
 	}
 
 	// Configure the Whisper service
@@ -591,23 +599,23 @@ func mustMakeEthConf(ctx *cli.Context, sconf *core.SufficientChainConfig) *ngin.
 	ethConf := &ngin.Config{
 		ChainConfig:             sconf.ChainConfig,
 		Genesis:                 sconf.Genesis,
-		UseAddrTxIndex:    ctx.GlobalBool(aliasableName(AddrTxIndexFlag.Name, ctx)),
-		FastSync:          ctx.GlobalBool(aliasableName(FastSyncFlag.Name, ctx)),
-		BlockChainVersion: ctx.GlobalInt(aliasableName(BlockchainVersionFlag.Name, ctx)),
-		DatabaseCache:     ctx.GlobalInt(aliasableName(CacheFlag.Name, ctx)),
-		DatabaseHandles:   MakeDatabaseHandles(),
-		NetworkId:         sconf.Network,
-		MaxPeers:          ctx.GlobalInt(aliasableName(MaxPeersFlag.Name, ctx)),
-		AccountManager:    accman,
-		Coinbase:          MakeCoinbase(accman, ctx),
-		MinerThreads:      ctx.GlobalInt(aliasableName(MinerThreadsFlag.Name, ctx)),
-		NatSpec:           ctx.GlobalBool(aliasableName(NatspecEnabledFlag.Name, ctx)),
-		DocRoot:           ctx.GlobalString(aliasableName(DocRootFlag.Name, ctx)),
-		GasPrice:          new(big.Int),
-		GpoMinGasPrice:    new(big.Int),
-		GpoMaxGasPrice:    new(big.Int),
-		GpoFullBlockRatio: ctx.GlobalInt(aliasableName(GpoFullBlockRatioFlag.Name, ctx)),
-		GpobaseStepDown:   ctx.GlobalInt(aliasableName(GpobaseStepDownFlag.Name, ctx)),
+		UseAddrTxIndex:          ctx.GlobalBool(aliasableName(AddrTxIndexFlag.Name, ctx)),
+		FastSync:                ctx.GlobalBool(aliasableName(FastSyncFlag.Name, ctx)),
+		BlockChainVersion:       ctx.GlobalInt(aliasableName(BlockchainVersionFlag.Name, ctx)),
+		DatabaseCache:           ctx.GlobalInt(aliasableName(CacheFlag.Name, ctx)),
+		DatabaseHandles:         MakeDatabaseHandles(),
+		NetworkId:               sconf.Network,
+		MaxPeers:                ctx.GlobalInt(aliasableName(MaxPeersFlag.Name, ctx)),
+		AccountManager:          accman,
+		Coinbase:                MakeCoinbase(accman, ctx),
+		MinerThreads:            ctx.GlobalInt(aliasableName(MinerThreadsFlag.Name, ctx)),
+		NatSpec:                 ctx.GlobalBool(aliasableName(NatspecEnabledFlag.Name, ctx)),
+		DocRoot:                 ctx.GlobalString(aliasableName(DocRootFlag.Name, ctx)),
+		GasPrice:                new(big.Int),
+		GpoMinGasPrice:          new(big.Int),
+		GpoMaxGasPrice:          new(big.Int),
+		GpoFullBlockRatio:       ctx.GlobalInt(aliasableName(GpoFullBlockRatioFlag.Name, ctx)),
+		GpobaseStepDown:         ctx.GlobalInt(aliasableName(GpobaseStepDownFlag.Name, ctx)),
 		GpobaseStepUp:           ctx.GlobalInt(aliasableName(GpobaseStepUpFlag.Name, ctx)),
 		GpobaseCorrectionFactor: ctx.GlobalInt(aliasableName(GpobaseCorrectionFactorFlag.Name, ctx)),
 		SolcPath:                ctx.GlobalString(aliasableName(SolcPathFlag.Name, ctx)),
@@ -680,7 +688,7 @@ func mustMakeSufficientChainConfig(ctx *cli.Context) *core.SufficientChainConfig
 		// Initialise chain configuration before handling migrations or setting up node.
 		config.Identity = chainIdentity
 		config.Name = mustMakeChainConfigNameDefaulty(ctx)
-		config.Network = ngin.NetworkId // 1, default mainnet
+		config.Network = ngin.NetworkId // 52520, default mainnet, etc/eth is 1
 		config.Consensus = "M00N"
 		config.Genesis = core.DefaultConfigMainnet.Genesis
 		config.ChainConfig = MustMakeChainConfigFromDefaults(ctx).SortForks()

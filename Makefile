@@ -88,7 +88,10 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 release:
-    
+	mkdir -p ./${BINARY}
+	CGO_CFLAGS_ALLOW='.*' go build -ldflags "-s -w -X main.Version="`git describe --tags` -o ${BINARY}/ngind -tags="netgo" ./cmd/ngind
+	@echo "Done building ngin."
+	@echo "Run \"$(BINARY)/ngind\" to launch ngind"
 
 
 .PHONY: fmt build cmd/ngind cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump install install_ngind clean help static

@@ -18,6 +18,7 @@ package miner
 
 import (
 	"fmt"
+	"github.com/NginProject/ngind/masternode"
 	"log"
 	"math/big"
 	"sync"
@@ -30,10 +31,10 @@ import (
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/core/vm"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 
 	"gopkg.in/fatih/set.v0"
 )
@@ -500,32 +501,33 @@ func (self *worker) commitNewWork() {
 	transactions := self.ngin.TxPool().GetTransactions()
 	types.SortByPriceAndNonce(transactions)
 
-	/* // approach 3
+	// approach 3
 	// commit transactions for this run.
-	txPerOwner := make(map[common.Address]types.Transactions)
-	// Sort transactions by owner
-	for _, tx := range self.ngin.TxPool().GetTransactions() {
-		from, _ := tx.From() // we can ignore the sender error
-		txPerOwner[from] = append(txPerOwner[from], tx)
-	}
-	var (
-		singleTxOwner types.Transactions
-		multiTxOwner  types.Transactions
-	)
-	// Categorise transactions by
-	// 1. 1 owner tx per block
-	// 2. multi txs owner per block
-	for _, txs := range txPerOwner {
-		if len(txs) == 1 {
-			singleTxOwner = append(singleTxOwner, txs[0])
-		} else {
-			multiTxOwner = append(multiTxOwner, txs...)
-		}
-	}
-	sort.Sort(types.TxByPrice(singleTxOwner))
-	sort.Sort(types.TxByNonce(multiTxOwner))
-	transactions := append(singleTxOwner, multiTxOwner...)
-	*/
+	//txPerOwner := make(map[common.Address]types.Transactions)
+	//// Sort transactions by owner
+	//for _, tx := range self.ngin.TxPool().GetTransactions() {
+	//	from, _ := tx.From() // we can ignore the sender error
+	//	txPerOwner[from] = append(txPerOwner[from], tx)
+	//}
+	//var (
+	//	singleTxOwner types.Transactions
+	//	multiTxOwner  types.Transactions
+	//)
+	//
+	//// Categorise transactions by
+	//// 1. 1 owner tx per block
+	//// 2. multi txs owner per block
+	//for _, txs := range txPerOwner {
+	//	if len(txs) == 1 {
+	//		singleTxOwner = append(singleTxOwner, txs[0])
+	//	} else {
+	//		multiTxOwner = append(multiTxOwner, txs...)
+	//	}
+	//}
+	//sort.Sort(types.TxByPrice(singleTxOwner))
+	//sort.Sort(types.TxByNonce(multiTxOwner))
+	//transactions := append(singleTxOwner, multiTxOwner...)
+	//
 
 	work.commitTransactions(self.mux, transactions, self.gasPrice, self.chain)
 	self.ngin.TxPool().RemoveTransactions(work.lowGasTxs)
@@ -556,7 +558,8 @@ func (self *worker) commitNewWork() {
 
 	if atomic.LoadInt32(&self.mining) == 1 {
 		// commit state root after all state transitions.
-		core.AccumulateRewards(work.config, work.state, header, uncles)
+		mns := []*masternode.MasterNode{}
+		core.AccumulateRewards(work.config, work.state, header, uncles, mns)
 		header.Root = work.state.IntermediateRoot(false)
 	}
 

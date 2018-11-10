@@ -39,9 +39,9 @@ import (
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/core/vm"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/p2p/discover"
 )
 
@@ -67,7 +67,7 @@ var (
 		"mainnet": true,
 	}
 	ChainIdentitiesTestnet = map[string]bool{
-		"test":  true,
+		"test":    true,
 		"testnet": true,
 	}
 
@@ -211,7 +211,7 @@ func (c *SufficientChainConfig) IsValid() (string, bool) {
 		return "networkId", false
 	}
 
-	if c := c.Consensus; c == ""{
+	if c := c.Consensus; c == "" {
 		return "consensus", false
 	}
 
@@ -304,14 +304,14 @@ func (c *ChainConfig) IsHomestead(num *big.Int) bool {
 }
 
 // TODO:for fork
-// IsDiehard returns whether num is greater than or equal to the Diehard block, but less than explosion.
-//func (c *ChainConfig) IsDiehard(num *big.Int) bool {
-//	fork := c.ForkByName("Diehard")
-//	if fork.Block == nil || num == nil {
-//		return false
-//	}
-//	return num.Cmp(fork.Block) >= 0
-//}
+// IsRadical := IsDiehard returns whether num is greater than or equal to the Diehard block, but less than explosion.
+func (c *ChainConfig) IsRadical(num *big.Int) bool {
+	fork := c.ForkByName("Radical")
+	if fork.Block == nil || num == nil {
+		return false
+	}
+	return num.Cmp(fork.Block) >= 0
+}
 
 // IsExplosion returns whether num is either equal to the explosion block or greater.
 //func (c *ChainConfig) IsExplosion(num *big.Int) bool {

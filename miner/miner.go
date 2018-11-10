@@ -27,10 +27,10 @@ import (
 	"github.com/NginProject/ngind/core"
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
-	"github.com/NginProject/ngind/ngin/downloader"
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngin/downloader"
 	"github.com/NginProject/ngind/pow"
 )
 

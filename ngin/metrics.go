@@ -19,6 +19,7 @@ package ngin
 import (
 	"github.com/NginProject/ngind/metrics"
 	"github.com/NginProject/ngind/p2p"
+	"github.com/NginProject/ngind/protocol"
 )
 
 // meteredMsgReadWriter is a wrapper around a p2p.MsgReadWriter, capable of
@@ -52,9 +53,9 @@ func (rw *meteredMsgReadWriter) ReadMsg() (p2p.Msg, error) {
 		messages, bytes = metrics.MsgHeaderIn, metrics.MsgHeaderInBytes
 	case msg.Code == BlockBodiesMsg:
 		messages, bytes = metrics.MsgBodyIn, metrics.MsgBodyInBytes
-	case rw.version >= ng63 && msg.Code == NodeDataMsg:
+	case rw.version >= protocol.Ng65 && msg.Code == NodeDataMsg:
 		messages, bytes = metrics.MsgStateIn, metrics.MsgStateInBytes
-	case rw.version >= ng63 && msg.Code == ReceiptsMsg:
+	case rw.version >= protocol.Ng65 && msg.Code == ReceiptsMsg:
 		messages, bytes = metrics.MsgReceiptIn, metrics.MsgReceiptInBytes
 	case msg.Code == NewBlockHashesMsg:
 		messages, bytes = metrics.MsgHashIn, metrics.MsgHashInBytes
@@ -76,9 +77,9 @@ func (rw *meteredMsgReadWriter) WriteMsg(msg p2p.Msg) error {
 		messages, bytes = metrics.MsgHeaderOut, metrics.MsgHeaderOutBytes
 	case msg.Code == BlockBodiesMsg:
 		messages, bytes = metrics.MsgBodyOut, metrics.MsgBodyOutBytes
-	case rw.version >= ng63 && msg.Code == NodeDataMsg:
+	case rw.version >= protocol.Ng65 && msg.Code == NodeDataMsg:
 		messages, bytes = metrics.MsgStateOut, metrics.MsgStateOutBytes
-	case rw.version >= ng63 && msg.Code == ReceiptsMsg:
+	case rw.version >= protocol.Ng65 && msg.Code == ReceiptsMsg:
 		messages, bytes = metrics.MsgReceiptOut, metrics.MsgReceiptOutBytes
 	case msg.Code == NewBlockHashesMsg:
 		messages, bytes = metrics.MsgHashOut, metrics.MsgHashOutBytes

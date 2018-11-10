@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/NginProject/ngind/core"
-	"github.com/NginProject/ngind/ngin"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
 	"github.com/NginProject/ngind/metrics"
+	"github.com/NginProject/ngind/ngin"
 	"github.com/gizak/termui"
 	"gopkg.in/urfave/cli.v1"
 )

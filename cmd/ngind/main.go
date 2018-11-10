@@ -28,12 +28,12 @@ import (
 
 	"gopkg.in/urfave/cli.v1"
 
-	rtppf "github.com/ethereumproject/benchmark/rtprof"
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/console"
 	"github.com/NginProject/ngind/core"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/metrics"
+	rtppf "github.com/ethereumproject/benchmark/rtprof"
 )
 
 // Version is the application revision identifier. It can be set with the linker

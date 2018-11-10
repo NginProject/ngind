@@ -28,10 +28,10 @@ import (
 
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core/types"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/pow"
 	"github.com/hashicorp/golang-lru"
 )

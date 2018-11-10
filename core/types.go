@@ -26,8 +26,8 @@ import (
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/core/vm"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/event"
+	"github.com/NginProject/ngind/ngindb"
 )
 
 // Validator is an interface which defines the standard for block validation.

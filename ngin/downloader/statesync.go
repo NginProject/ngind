@@ -25,9 +25,9 @@ import (
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/crypto/sha3"
-	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/ngindb"
 	"github.com/NginProject/ngind/trie"
 )
 

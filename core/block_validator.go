@@ -22,6 +22,7 @@ import (
 	"math/big"
 	"time"
 
+	M00NFORPOOL "github.com/NginProject/M00N"
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core/state"
 	"github.com/NginProject/ngind/core/types"
@@ -257,10 +258,20 @@ func ValidateHeader(config *ChainConfig, pow pow.PoW, header *types.Header, pare
 	}
 
 	if checkPow {
-		// Verify the nonce of the header. Return an error if it's not valid
-		if !pow.Verify(types.NewBlockWithHeader(header)) {
-			return &BlockNonceErr{header.Number, header.Hash(), header.Nonce.Uint64()}
+		if header.Number.Cmp(big.NewInt(3*(100000))) == 1 {
+			hasher := M00NFORPOOL.New()
+			// Verify the nonce of the header. Return an error if it's not valid
+			if !hasher.Verify(types.NewBlockWithHeader(header)) {
+				return &BlockNonceErr{header.Number, header.Hash(), header.Nonce.Uint64()}
+			}
+		} else {
+			hasher := M00NFORPOOL.NewOrigin()
+			// Verify the nonce of the header. Return an error if it's not valid
+			if !hasher.Verify(types.NewBlockWithHeader(header)) {
+				return &BlockNonceErr{header.Number, header.Hash(), header.Nonce.Uint64()}
+			}
 		}
+
 	}
 	// If all checks passed, validate the extra-data field for hard forks
 	return nil

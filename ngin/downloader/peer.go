@@ -22,6 +22,7 @@ package downloader
 import (
 	"errors"
 	"fmt"
+	"github.com/NginProject/ngind/protocol"
 	"math"
 	"math/big"
 	"sort"
@@ -136,7 +137,7 @@ func (p *peer) Reset() {
 // FetchHeaders sends a header retrieval request to the remote peer.
 func (p *peer) FetchHeaders(from uint64, count int) error {
 	// Sanity check the protocol version
-	if p.version < 62 {
+	if p.version < protocol.Ng64 {
 		panic(fmt.Sprintf("header fetch [ngin/62+] requested on ngin/%d", p.version))
 	}
 	// Short circuit if the peer is already fetching
@@ -154,7 +155,7 @@ func (p *peer) FetchHeaders(from uint64, count int) error {
 // FetchBodies sends a block body retrieval request to the remote peer.
 func (p *peer) FetchBodies(request *fetchRequest) error {
 	// Sanity check the protocol version
-	if p.version < 62 {
+	if p.version < protocol.Ng64 {
 		panic(fmt.Sprintf("body fetch [ngin/62+] requested on ngin/%d", p.version))
 	}
 	//Short circuit if the peer is already fetching
@@ -176,8 +177,8 @@ func (p *peer) FetchBodies(request *fetchRequest) error {
 // FetchReceipts sends a receipt retrieval request to the remote peer.
 func (p *peer) FetchReceipts(request *fetchRequest) error {
 	// Sanity check the protocol version
-	if p.version < 63 {
-		panic(fmt.Sprintf("body fetch [ngin/63+] requested on ngin/%d", p.version))
+	if p.version < protocol.Ng64 {
+		panic(fmt.Sprintf("body fetch [ngin/62+] requested on ngin/%d", p.version))
 	}
 	// Short circuit if the peer is already fetching
 	if !atomic.CompareAndSwapInt32(&p.receiptIdle, 0, 1) {
@@ -198,8 +199,8 @@ func (p *peer) FetchReceipts(request *fetchRequest) error {
 // FetchNodeData sends a node state data retrieval request to the remote peer.
 func (p *peer) FetchNodeData(hashes []common.Hash) error {
 	// Sanity check the protocol version
-	if p.version < 63 {
-		panic(fmt.Sprintf("node data fetch [ngin/63+] requested on ngin/%d", p.version))
+	if p.version < protocol.Ng64 {
+		panic(fmt.Sprintf("node data fetch [ngin/62+] requested on ngin/%d", p.version))
 	}
 	// Short circuit if the peer is already fetching
 	if !atomic.CompareAndSwapInt32(&p.stateIdle, 0, 1) {
@@ -495,7 +496,7 @@ func (ps *peerSet) HeaderIdlePeers() ([]*peer, int) {
 		defer p.lock.RUnlock()
 		return p.headerThroughput
 	}
-	return ps.idlePeers(62, 64, idle, throughput)
+	return ps.idlePeers(protocol.Ng64, protocol.Ng65, idle, throughput)
 }
 
 // BodyIdlePeers retrieves a flat list of all the currently body-idle peers within
@@ -509,7 +510,7 @@ func (ps *peerSet) BodyIdlePeers() ([]*peer, int) {
 		defer p.lock.RUnlock()
 		return p.blockThroughput
 	}
-	return ps.idlePeers(62, 64, idle, throughput)
+	return ps.idlePeers(protocol.Ng64, protocol.Ng65, idle, throughput)
 }
 
 // ReceiptIdlePeers retrieves a flat list of all the currently receipt-idle peers
@@ -523,7 +524,7 @@ func (ps *peerSet) ReceiptIdlePeers() ([]*peer, int) {
 		defer p.lock.RUnlock()
 		return p.receiptThroughput
 	}
-	return ps.idlePeers(63, 64, idle, throughput)
+	return ps.idlePeers(protocol.Ng64, protocol.Ng65, idle, throughput)
 }
 
 // NodeDataIdlePeers retrieves a flat list of all the currently node-data-idle
@@ -537,7 +538,7 @@ func (ps *peerSet) NodeDataIdlePeers() ([]*peer, int) {
 		defer p.lock.RUnlock()
 		return p.stateThroughput
 	}
-	return ps.idlePeers(63, 64, idle, throughput)
+	return ps.idlePeers(protocol.Ng64, protocol.Ng65, idle, throughput)
 }
 
 // idlePeers retrieves a flat list of all currently idle peers satisfying the

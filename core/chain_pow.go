@@ -19,6 +19,7 @@ package core
 import (
 	"runtime"
 
+	M00NFORPOOL "github.com/NginProject/M00N"
 	"github.com/NginProject/ngind/core/types"
 	"github.com/NginProject/ngind/pow"
 )
@@ -59,13 +60,21 @@ func verifyNonces(checker pow.PoW, items []pow.Block) (chan<- struct{}, <-chan n
 	if len(items) < workers {
 		workers = len(items)
 	}
+
 	// Create a task channel and spawn the verifiers
 	tasks := make(chan int, workers)
 	results := make(chan nonceCheckResult, len(items)) // Buffered to make sure all workers stop
 	for i := 0; i < workers; i++ {
 		go func() {
 			for index := range tasks {
-				results <- nonceCheckResult{index: index, valid: checker.Verify(items[index])}
+				if items[index].NumberU64() > 3*(100000) {
+					hasher := M00NFORPOOL.New()
+					results <- nonceCheckResult{index: index, valid: hasher.Verify(items[index])}
+				} else {
+					hasher := M00NFORPOOL.NewOrigin()
+					results <- nonceCheckResult{index: index, valid: hasher.Verify(items[index])}
+				}
+
 			}
 		}()
 	}

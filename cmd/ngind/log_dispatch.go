@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/NginProject/ngind/core"
+	"github.com/NginProject/ngind/event"
+	"github.com/NginProject/ngind/logger/glog"
 	"github.com/NginProject/ngind/ngin"
 	"github.com/NginProject/ngind/ngin/downloader"
 	"github.com/NginProject/ngind/ngin/fetcher"
-	"github.com/NginProject/ngind/event"
-	"github.com/NginProject/ngind/logger/glog"
 	"gopkg.in/urfave/cli.v1"
 )
 
