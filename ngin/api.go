@@ -885,6 +885,9 @@ type RPCTransaction struct {
 	Value            *rpc.HexNumber  `json:"value"`
 	ReplayProtected  bool            `json:"replayProtected"`
 	ChainId          *big.Int        `json:"chainId,omitempty"`
+	V                *rpc.HexNumber  `json:"v"`
+	R                *rpc.HexNumber  `json:"r"`
+	S                *rpc.HexNumber  `json:"s"`	
 }
 
 // newRPCPendingTransaction returns a pending transaction that will serialize to the RPC representation
@@ -926,6 +929,8 @@ func newRPCTransactionFromBlockIndex(b *types.Block, txIndex int) (*RPCTransacti
 		}
 		from, _ := types.Sender(signer, tx)
 
+		v, r, s := tx.RawSignatureValues()		
+		
 		return &RPCTransaction{
 			BlockHash:        b.Hash(),
 			BlockNumber:      rpc.NewHexNumber(b.Number()),
@@ -940,6 +945,9 @@ func newRPCTransactionFromBlockIndex(b *types.Block, txIndex int) (*RPCTransacti
 			Value:            rpc.NewHexNumber(tx.Value()),
 			ReplayProtected:  protected,
 			ChainId:          chainId,
+			V:                rpc.NewHexNumber(v),
+			R:                rpc.NewHexNumber(r),
+			S:                rpc.NewHexNumber(s),			
 		}, nil
 	}
 
