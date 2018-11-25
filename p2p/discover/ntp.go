@@ -64,6 +64,10 @@ func checkClockDrift() {
 	}
 }
 
+func CheckClockDrift(){
+	checkClockDrift()
+}
+
 // sntpDrift does a naive time resolution against an NTP server and returns the
 // measured drift. This method uses the simple version of NTP. It's not precise
 // but should be fine for these purposes.
