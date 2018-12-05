@@ -96,11 +96,11 @@ $ ngind
 
 It's that easy! This will establish an WEB blockchain node and download ("sync") the full blocks for the entirety of the WEB blockchain. __However__, before you go ahead with plain ol' `ngind`, we would encourage reviewing the following section...
 
-#### :speedboat: `--mining`
+#### :speedboat: `--mine`
 
-To gain the Ngin cash, you should run the ngind with `--mining` tag. 
+To gain the Ngin cash, you should run the ngind with `--mine` tag. 
 
-If you dont have address, run `ngind address new` before `ngind --mining`
+If you dont have address, run `ngind address new` before `ngind --mine`
 
 If you still get error, plz check your coinbase address.
 
