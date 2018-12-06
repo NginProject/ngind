@@ -18,6 +18,7 @@ require (
 	github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329
 	github.com/microsoft/go-winio v0.4.11
 	github.com/nsf/termbox-go v0.0.0-20181027232701-60ab7e3d12ed // indirect
+	github.com/omeid/go-resources v0.0.0-20171025031226-ca9993b7d1a4 // indirect
 	github.com/onsi/gomega v1.4.2 // indirect
 	github.com/peterh/liner v1.1.0
 	github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a

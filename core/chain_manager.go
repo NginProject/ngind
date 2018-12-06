@@ -204,7 +204,7 @@ func GenerateChain(config *ChainConfig, parent *types.Block, db ngindb.Database,
 			gen(i, b)
 		}
 
-		mns := []*masternode.MasterNode{}
+		mns := []*masternode.Masternode{}
 
 		AccumulateRewards(config, statedb, h, b.uncles, mns)
 		root, err := statedb.CommitTo(db, false)
