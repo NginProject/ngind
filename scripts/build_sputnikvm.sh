@@ -7,7 +7,11 @@ OUTPUT="$1"
 OS=`uname -s`
 
 root_path="`pwd`"
-root_path_win="`pwd -W`"
+case $OS in
+    CYGWIN*|MINGW32*|MSYS*|MINGW64*)
+        root_path_win="`pwd -W`"
+        ;;
+esac
 
 echo "Go Geting SputnikVM"
 git clone "https://github.com/NginProject/sputnikvm-ffi"
