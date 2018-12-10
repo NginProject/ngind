@@ -15,10 +15,9 @@ WITH_SVM?=1
 # Provide default value of GOPATH, if it's not set in environment
 export GOPATH?=${HOME}/go
 
-LDFLAGS=-ldflags "-X main.Version="`git describe --tags`
+LDFLAGS=-ldflags "-s -w -X main.Version="`git describe --tags`
 
-
-build: cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump cmd/ngind ## Build a local snapshot binary versions of all commands
+build: build_ngind ## Build a local snapshot binary versions of ngind
 	@ls -ld $(BINARY)/*
 
 cmd/ngind: chainconfig ## Build a local snapshot binary version of ngind. Use WITH_SVM=1 to enable building with SputnikVM (default: WITH_SVM=1)
@@ -56,10 +55,10 @@ cmd/rlpdump: ## Build a local snapshot of rlpdump.
 	@echo "Done building rlpdump."
 	@echo "Run \"$(BINARY)/rlpdump\" to launch rlpdump."
 
-build_ngind:  ## Build ngind to $GOPATH/bin. Use WITH_SVM=0 to disable building with SputnikVM (default: WITH_SVM=0)
+build_ngind: ## Build ngind to ./bin. Use WITH_SVM=0 to disable building with SputnikVM (default: WITH_SVM=0)
 	$(info Building bin/ngind)
 ifeq (${WITH_SVM}, 1)
-	./scripts/build_sputnikvm.sh
+	bash scripts/build_sputnikvm.sh
 else
 	CGO_CFLAGS_ALLOW='.*' go build ${LDFLAGS} -tags="netgo" ./cmd/ngind ; fi
 endif
@@ -77,17 +76,11 @@ ${GOPATH}/bin/resources:
 
 clean: ## Remove local snapshot binary directory
 	if [ -d ${BINARY} ] ; then rm -rf ${BINARY} ; fi
+	if [ -d "sputnikvm-ffi" ] ; then rm -rf "sputnikvm-ffi" ; fi
 	go clean -i ./...
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-release:
-	mkdir -p ./${BINARY}
-	CGO_CFLAGS_ALLOW='.*' go build -ldflags "-s -w -X main.Version="`git describe --tags` -o ${BINARY}/ngind -tags="netgo" ./cmd/ngind
-	@echo "Done building ngin."
-	@echo "Run \"$(BINARY)/ngind\" to launch ngind"
-
 
 .PHONY: fmt build cmd/ngind cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump build_ngind clean help static
