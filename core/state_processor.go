@@ -180,7 +180,6 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	//	}
 	//}
 
-	statedb.AddBalance(header.Coinbase, wr) // $$w
 	if era.Cmp(big.NewInt(5)) > 0 {
 		wr.Add(wr, dr)
 		statedb.AddBalance(d, dr) // $$w
@@ -192,6 +191,8 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 		ur := GetBlockUncleRewardByEra(era, header, uncle)
 		statedb.AddBalance(uncle.Coinbase, ur) // $$
 	}
+
+	statedb.AddBalance(header.Coinbase, wr) // $$w
 }
 
 // Uncle miners and winners are rewarded equally for each included block.

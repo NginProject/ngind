@@ -32,6 +32,7 @@ type MasternodeManager struct {
 	mu       sync.Mutex
 	// channels for fetcher, syncer, txsyncLoop
 	newPeerCh    chan *peer
+
 	IsMasternode uint32
 	srvr         *p2p.Server
 	blockchain   *core.BlockChain

@@ -119,8 +119,9 @@ type Config struct {
 	// If NoDial is true, the server will not dial any peers.
 	NoDial bool
 
+	//TODO: Next Hard Fork
 	// MasterNode
-	IsMasternode bool
+	//IsMasternode bool
 }
 
 // Server manages all peer connections.
@@ -797,7 +798,8 @@ type NodeInfo struct {
 	} `json:"ports"`
 	ListenAddr string                 `json:"listenAddr"`
 	Protocols  map[string]interface{} `json:"protocols"`
-	IsMasternode bool `json:"isMasternode"`
+	//TODO: Next Hard Fork
+	//IsMasternode bool `json:"isMasternode"`
 }
 
 // Info gathers and returns a collection of metadata known about the host.
@@ -815,7 +817,8 @@ func (srv *Server) NodeInfo() *NodeInfo {
 	}
 	info.Ports.Discovery = int(node.UDP)
 	info.Ports.Listener = int(node.TCP)
-	info.IsMasternode = srv.Config.IsMasternode
+	//TODO: Next Hard Fork
+	//info.IsMasternode = srv.Config.IsMasternode
 
 	// Gather all the running protocol infos (only once per protocol type)
 	for _, proto := range srv.Protocols {
