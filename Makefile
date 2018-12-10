@@ -58,7 +58,7 @@ cmd/rlpdump: ## Build a local snapshot of rlpdump.
 build_ngind: ## Build ngind to ./bin. Use WITH_SVM=0 to disable building with SputnikVM (default: WITH_SVM=0)
 	$(info Building bin/ngind)
 ifeq (${WITH_SVM}, 1)
-	bash scripts/build_sputnikvm.sh
+	chmod +x scripts/build_sputnikvm.sh && ./scripts/build_sputnikvm.sh
 else
 	CGO_CFLAGS_ALLOW='.*' go build ${LDFLAGS} -tags="netgo" ./cmd/ngind ; fi
 endif

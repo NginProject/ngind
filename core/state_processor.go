@@ -166,11 +166,10 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	//mnr := new(big.Int).Div(wr, big.NewInt(2))
 	dr := new(big.Int).Div(wr, big.NewInt(10))
 	wurs := GetBlockWinnerRewardForUnclesByEra(era, uncles) // wurs "winner uncle rewards"
-	mnr := GetBlockMasterNodeRewardByEra(era, header, mns)
+	//mnr := GetBlockMasterNodeRewardByEra(era, header, mns)
 
-	wr.Add(wr, wurs)
-	wr.Add(wr, mnr)
-	wr.Add(wr, dr)
+	//wr.Add(wr, mnr)
+
 
 	// TODO:MN_Updates
 	//if era.Cmp(big.NewInt(6)) > 0 {
@@ -182,11 +181,13 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	//}
 
 	statedb.AddBalance(header.Coinbase, wr) // $$w
-	if era.Cmp(big.NewInt(6)) > 0 {
+	if era.Cmp(big.NewInt(5)) > 0 {
+		wr.Add(wr, dr)
 		statedb.AddBalance(d, dr) // $$w
 	}
 
 	// Reward uncle miners.
+	wr.Add(wr, wurs)
 	for _, uncle := range uncles {
 		ur := GetBlockUncleRewardByEra(era, header, uncle)
 		statedb.AddBalance(uncle.Coinbase, ur) // $$
