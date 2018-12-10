@@ -15,15 +15,14 @@ WITH_SVM?=1
 # Provide default value of GOPATH, if it's not set in environment
 export GOPATH?=${HOME}/go
 
-LDFLAGS=-ldflags "-X main.Version="`git describe --tags`
+LDFLAGS=-ldflags "-s -w -X main.Version="`git describe --tags`
 
-
-build: cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump cmd/ngind ## Build a local snapshot binary versions of all commands
+build: build_ngind ## Build a local snapshot binary versions of ngind
 	@ls -ld $(BINARY)/*
 
 cmd/ngind: chainconfig ## Build a local snapshot binary version of ngind. Use WITH_SVM=1 to enable building with SputnikVM (default: WITH_SVM=1)
 ifeq (${WITH_SVM}, 1)
-	./scripts/build_sputnikvm.sh build
+	./scripts/build_sputnikvm.sh
 else
 	mkdir -p ./${BINARY}
 	CGO_CFLAGS_ALLOW='.*' go build ${LDFLAGS} -o ${BINARY}/ngind -tags="netgo" ./cmd/ngind
@@ -47,7 +46,7 @@ cmd/disasm: ## Build a local snapshot of disasm.
 	@echo "Run \"$(BINARY)/disasm\" to launch disasm."
 
 cmd/evm: ## Build a local snapshot of evm.
-	mkdir -p ./${BINARY} && go build ${LDFLAGS} -o ${BINARY}/evm ./cmd/evm
+	mkdir -p ./${BINARY} && CGO_CFLAGS_ALLOW='.*' go build ${LDFLAGS} -o ${BINARY}/evm ./cmd/evm
 	@echo "Done building evm."
 	@echo "Run \"$(BINARY)/evm\" to launch evm."
 
@@ -56,16 +55,12 @@ cmd/rlpdump: ## Build a local snapshot of rlpdump.
 	@echo "Done building rlpdump."
 	@echo "Run \"$(BINARY)/rlpdump\" to launch rlpdump."
 
-install: ## Install all packages to $GOPATH/bin
-	go install ./cmd/{abigen,bootnode,disasm,ethtest,evm,gethrpctest,rlpdump}
-	$(MAKE) install_ngind
-
-install_ngind: chainconfig ## Install ngind to $GOPATH/bin. Use WITH_SVM=0 to disable building with SputnikVM (default: WITH_SVM=0)
-	$(info Installing $$GOPATH/bin/ngind)
+build_ngind: ## Build ngind to ./bin. Use WITH_SVM=0 to disable building with SputnikVM (default: WITH_SVM=0)
+	$(info Building bin/ngind)
 ifeq (${WITH_SVM}, 1)
-	./scripts/build_sputnikvm.sh install
+	chmod +x scripts/build_sputnikvm.sh && ./scripts/build_sputnikvm.sh
 else
-	go install ${LDFLAGS} -tags="netgo" ./cmd/ngind ; fi
+	CGO_CFLAGS_ALLOW='.*' go build ${LDFLAGS} -tags="netgo" ./cmd/ngind ; fi
 endif
 
 fmt: ## gofmt and goimports all go files
@@ -81,17 +76,11 @@ ${GOPATH}/bin/resources:
 
 clean: ## Remove local snapshot binary directory
 	if [ -d ${BINARY} ] ; then rm -rf ${BINARY} ; fi
+	if [ -d "sputnikvm-ffi" ] ; then rm -rf "sputnikvm-ffi" ; fi
 	go clean -i ./...
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-release:
-	mkdir -p ./${BINARY}
-	CGO_CFLAGS_ALLOW='.*' go build -ldflags "-s -w -X main.Version="`git describe --tags` -o ${BINARY}/ngind -tags="netgo" ./cmd/ngind
-	@echo "Done building ngin."
-	@echo "Run \"$(BINARY)/ngind\" to launch ngind"
-
-
-.PHONY: fmt build cmd/ngind cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump install install_ngind clean help static
+.PHONY: fmt build cmd/ngind cmd/abigen cmd/bootnode cmd/disasm cmd/evm cmd/rlpdump build_ngind clean help static

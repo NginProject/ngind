@@ -1,5 +1,5 @@
 {
-    "identity": "alpha",
+    "identity": "testnet",
     "name": "Ngin_Testnet",
     "state": {
         "startingNonce": 1

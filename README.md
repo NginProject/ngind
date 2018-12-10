@@ -1,10 +1,11 @@
-## Ngind
+# Ngind
 
-Official Go language implementation of the Ngin daemon.
+Official Ngin daemon.
 
 ## Install
 
 ### :rocket: From a release binary
+
 The simplest way to get started running a node is to visit our [Releases page](https://github.com/NginProject/ngind/releases) and download a zipped executable binary (matching your operating system, of course), then moving the unzipped file `ngind` to somewhere in your `$PATH`. Now you should be able to open a terminal and run `$ ngind help` to make sure it's working.
 
 ### :hammer: Building the source
@@ -13,52 +14,32 @@ If your heart is set on the bleeding edge, install from source. However, please 
 
 #### Dependencies
 
-Building ngind requires both Go >=__1.11__ and a C compiler. On Linux systems,
-a C compiler can, for example, by installed with `sudo apt-get install
-build-essential`. On Mac: `xcode-select --install`.
-
-#### Get source and dependencies
-```
-`$ go get -v github.com/NginProject/ngind/...`
-```
+Building ngind requires latest Rust, Go(>=__1.11__) and a C compiler(gcc).
+On Linux systems, a C compiler can, for example, by installed with `sudo apt-get install build-essential`.
+On Mac: `xcode-select --install`.
+On Windows we recommends using [msys2](https://www.msys2.org/) environment.
 
 #### Install and build command executables
 
-Executables installed from source will, by default, be installed in `$GOPATH/bin/`.
+Executables installed from source will, by default, be installed in `./bin/`.
 
-##### With go >= 1.11:
+##### Requirements
 
+```bash
+# Linux & Mac:
+sudo pacman -S base-devel git gcc go rust
+
+# Windows(msys2):
+pacman -S base-devel git mingw-w64-x86_64-toolchain mingw-w64-x86_64-go mingw-w64-x86_64-rust
 ```
-Linux & Mac:
-$ CGO_CFLAGS_ALLOW='.*' go install github.com/NginProject/ngind/cmd/ngind
-
-Windows:
-> set set CGO_CFLAGS_ALLOW=.*
-> go install github.com/NginProject/ngind/cmd/ngind
-```
-
-or you can use `go build`.
 
 ##### Building a specific release
-All the above commands results with building binaries from `HEAD`. To use a specific release/tag, use the following before installing:
 
 ```shell
-$ go get -d github.com/NginProject/ngind/...
-$ cd $GOPATH/src/github.com/NginProject/ngind
-$ git checkout <TAG OR REVISION>
-# Use a go command above.
-```
-
-##### Using a release source code tarball
-Because of strict Go directory structure, the tarball needs to be extracted into the proper subdirectory under `$GOPATH`.
-The following commands are an example of building the v0.1.0 release:
-
-```shell
-$ mkdir -p $GOPATH/src/github.com/NginProject/ngind
-$ cd $GOPATH/src/github.com/NginProject
-$ tar xzf /path/to/v0.1.0.tar.gz
-$ cd ngind
-# Use a go or make command above.
+git clone github.com/NginProject/ngind
+cd ngind && git checkout <TAG OR REVISION>
+make build_ngind
+./bin/ngind version
 ```
 
 ## Executables
@@ -77,7 +58,9 @@ This repository includes several wrappers/executables found in the `cmd` directo
 ## :green_book: ngind: the basics
 
 ### Data directory
+
 By default, ngind will store all node and blockchain data in a __parent directory__ depending on your OS:
+
 - Linux: `$HOME/.Ngin/`
 - Mac: `$HOME/Library/Ngin/`
 - Windows: `$HOME/AppData/Roaming/Ngin/`
@@ -86,12 +69,12 @@ __You can specify this directory__ with `--data-dir=$HOME/id/rather/put/it/here`
 
 Within this parent directory, ngind will use a __/subdirectory__ to hold data for each network you run. The defaults are:
 
- - `/mainnet` for the Mainnet
+- `/mainnet` for the Mainnet
 
 ### Full node on the main Ngin network
 
-```
-$ ngind
+```bash
+ngind
 ```
 
 It's that easy! This will establish an WEB blockchain node and download ("sync") the full blocks for the entirety of the WEB blockchain. __However__, before you go ahead with plain ol' `ngind`, we would encourage reviewing the following section...
@@ -108,8 +91,8 @@ If you still get error, plz check your coinbase address.
 
 The most common scenario is users wanting to simply interact with the Ngin network: create accounts; transfer funds; deploy and interact with contracts, and mine. For this particular use-case the user doesn't care about years-old historical data, so we can _fast-sync_ to the current state of the network. To do so:
 
-```
-$ ngind --fast
+```bash
+ngind --fast
 ```
 
 Using ngind in fast sync mode causes it to download only block _state_ data -- leaving out bulky transaction records -- which avoids a lot of CPU and memory intensive processing.
@@ -127,18 +110,21 @@ In case of using `--mine` together with `--fast`, ngind will operate as describe
 
 [ngind](https://github.com/NginProject/ngind/releases) is able to create, import, update, unlock, and otherwise manage your private (encrypted) key files. Key files are in JSON format and, by default, stored in the respective chain folder's `/keystore` directory; you can specify a custom location with the `--keystore` flag.
 
-```
-$ ngind account new
+```bash
+ngind account new
 ```
 
 This command will create a new account and prompt you to enter a passphrase to protect your account. It will return output similar to:
-```
+
+```bash
 Address: {0x52a8029355231d78099667a95d5875fab0d4fc4d}
 ```
+
 So your address is: 0x52a8029355231d78099667a95d5875fab0d4fc4d
 
 Other `account` subcommands include:
-```
+
+```bash
 SUBCOMMANDS:
 
         list    print account addresses
@@ -150,11 +136,11 @@ SUBCOMMANDS:
 
 Learn more at the [Accounts Wiki Page](https://github.com/NginProject/ngind/wiki/Managing-Accounts). If you're interested in using ngind to manage a lot (~100,000+) of accounts, please visit the [Indexing Accounts Wiki page](https://github.com/NginProject/ngind/wiki/Indexing-Accounts).
 
-
 ### Fast synchronisation
 
-ngind syncs with the network automatically after start. However, this method is might be slow for several nodes. Alternatively, you can download chaindata folder here: https://explorer.ngin.cash/chaindata.tar.gz and extract the "chaindata" folder into project folder:
-```
+ngind syncs with the network automatically after start. However, this method is might be slow for several nodes.
+
+```bash
 Linux:
 $ $HOME/.Ngin//mainnet/
 
@@ -165,19 +151,20 @@ Windows:
 > %APPDATA%\Ngin\mainnet\
 
 ```
+
 Then, restart the ngin instance.
 
 ### Interact with the Javascript console
-```
-$ ngind console
+
+```bash
+ngind console
 ```
 
 This command will start up ngind built-in interactive [JavaScript console](https://github.com/NginProject/ngind/wiki/JavaScript-Console), through which you can invoke all official [`web3` methods](https://github.com/ethereumproject/wiki/wiki/JavaScript-API) as well as ngind own [management APIs](https://github.com/NginProject/ngind/wiki/Management-APIs). This too is optional and if you leave it out you can always attach to an already running ngind instance with `ngind attach`.
 
 Learn more at the [Javascript Console Wiki page](https://github.com/NginProject/ngind/wiki/JavaScript-Console).
 
-
-### And so much more!
+### And so much more
 
 For a comprehensive list of command line options, please consult our [CLI Wiki page](https://github.com/NginProject/ngind/wiki/Command-Line-Options).
 
@@ -192,19 +179,19 @@ The IPC interface is enabled by default and exposes all the APIs supported by ng
 
 HTTP based JSON-RPC API options:
 
-  * `--rpc` Enable the HTTP-RPC server
-  * `--rpc-addr` HTTP-RPC server listening interface (default: "localhost")
-  * `--rpc-port` HTTP-RPC server listening port (default: 52521)
-  * `--rpc-api` API's offered over the HTTP-RPC interface (default: "eth,net,web3")
-  * `--rpc-cors-domain` Comma separated list of domains from which to accept cross origin requests (browser enforced)
-  * `--ws` Enable the WS-RPC server
-  * `--ws-addr` WS-RPC server listening interface (default: "localhost")
-  * `--ws-port` WS-RPC server listening port (default: 52522)
-  * `--ws-api` API's offered over the WS-RPC interface (default: "eth,net,web3")
-  * `--ws-origins` Origins from which to accept websockets requests
-  * `--ipc-disable` Disable the IPC-RPC server
-  * `--ipc-api` API's offered over the IPC-RPC interface (default: "admin,debug,ngin,miner,net,personal,shh,txpool,web3")
-  * `--ipc-path` Filename for IPC socket/pipe within the datadir (explicit paths escape it)
+- `--rpc` Enable the HTTP-RPC server
+- `--rpc-addr` HTTP-RPC server listening interface (default: "localhost")
+- `--rpc-port` HTTP-RPC server listening port (default: 52521)
+- `--rpc-api` API's offered over the HTTP-RPC interface (default: "eth,net,web3")
+- `--rpc-cors-domain` Comma separated list of domains from which to accept cross origin requests (browser enforced)
+- `--ws` Enable the WS-RPC server
+- `--ws-addr` WS-RPC server listening interface (default: "localhost")
+- `--ws-port` WS-RPC server listening port (default: 52522)
+- `--ws-api` API's offered over the WS-RPC interface (default: "eth,net,web3")
+- `--ws-origins` Origins from which to accept websockets requests
+- `--ipc-disable` Disable the IPC-RPC server
+- `--ipc-api` API's offered over the IPC-RPC interface (default: "admin,debug,ngin,miner,net,personal,shh,txpool,web3")
+- `--ipc-path` Filename for IPC socket/pipe within the datadir (explicit paths escape it)
 
 You'll need to use your own programming environments' capabilities (libraries, tools, etc) to connect via HTTP, WS or IPC to a ngind node configured with the above flags and you'll need to speak [JSON-RPC](http://www.jsonrpc.org/specification) on all transports. You can reuse the same connection for multiple requests!
 

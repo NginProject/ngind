@@ -19,8 +19,9 @@ const SputnikVMExists = true
 
 // UseSputnikVM determines whether the VM will be Sputnik or Geth's native one.
 // Awkward though it is to use a string variable, go's -ldflags relies on it being a constant string in order to be settable via -X from the command line,
-// eg. -ldflags "-X core.sUseSputnikVM=true".
-var UseSputnikVM string = "false"
+// eg. -ldflags "-X core.UseSputnikVM=true".
+// var UseSputnikVM string = "false"
+var UseSputnikVM string = "true"
 
 // Apply a transaction using the SputnikVM processor with the given
 // chain config and state. Note that we use the name of the chain

@@ -374,9 +374,9 @@ func (s *Ngin) APIs() []rpc.API {
 			Version:   "1.0",
 			Service:   ethreg.NewPrivateRegistarAPI(s.chainConfig, s.blockchain, s.chainDb, s.txPool, s.accountManager),
 		}, {
-			Namespace: "ngin",
+			Namespace: "ngind",
 			Version:   "1.0",
-			Service:   NewPublicNginAPI(s),
+			Service:   NewPublicNgindAPI(s),
 			Public:    true,
 		},
 	}

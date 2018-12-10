@@ -81,6 +81,7 @@ type peer struct {
 	*p2p.Peer
 	rw p2p.MsgReadWriter
 
+	isMasternode bool
 	version  int         // Protocol version negotiated
 	forkDrop *time.Timer // Timed connection dropper if forks aren't validated in time
 
