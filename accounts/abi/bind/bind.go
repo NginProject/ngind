@@ -23,13 +23,13 @@ package bind
 import (
 	"bytes"
 	"fmt"
+	"go/format"
 	"regexp"
 	"strings"
 	"text/template"
 	"unicode"
 
 	"github.com/NginProject/ngind/accounts/abi"
-	"golang.org/x/tools/imports"
 )
 
 // Bind generates a Go wrapper around a contract ABI. This wrapper isn't meant
@@ -108,8 +108,8 @@ func Bind(types []string, abis []string, bytecodes []string, pkg string) (string
 	if err := tmpl.Execute(buffer, data); err != nil {
 		return "", err
 	}
-	// Pass the code through goimports to clean it up and double check
-	code, err := imports.Process("", buffer.Bytes(), nil)
+	// For Go bindings pass the code through gofmt to clean it up, removed the goimportst
+	code, err := format.Source(buffer.Bytes())
 	if err != nil {
 		return "", fmt.Errorf("%v\n%s", err, buffer)
 	}

@@ -50,6 +50,28 @@ const tmplSource = `
 
 package {{.Package}}
 
+import (
+	"math/big"
+	"strings"
+ 	"github.com/NginProject/ngind"
+	"github.com/NginProject/ngind/accounts/abi"
+	"github.com/NginProject/ngind/accounts/abi/bind"
+	"github.com/NginProject/ngind/common"
+	"github.com/NginProject/ngind/core/types"
+	"github.com/NginProject/ngind/event"
+)
+
+var (
+	_ = big.NewInt
+	_ = strings.NewReader
+	_ = ethereum.NotFound
+	_ = abi.U256
+	_ = bind.Bind
+	_ = common.Big1
+	_ = types.BloomLookup
+	_ = event.NewSubscription
+)
+
 {{range $contract := .Contracts}}
 	// {{.Type}}ABI is the input ABI used to generate the binding from.
 	const {{.Type}}ABI = ` + "`" + `{{.InputABI}}` + "`" + `

@@ -1,7 +1,6 @@
 package ngin
 
 import (
-
 	"fmt"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
@@ -15,8 +14,8 @@ import (
 
 	"github.com/NginProject/ngind/core"
 	"github.com/NginProject/ngind/masternode"
-	"github.com/NginProject/ngind/p2p"
 	"github.com/NginProject/ngind/ngin/downloader"
+	"github.com/NginProject/ngind/p2p"
 	"github.com/NginProject/ngind/p2p/discover"
 )
 
@@ -27,11 +26,11 @@ var (
 type MasternodeManager struct {
 	beats map[common.Hash]time.Time // Last heartbeat from each known vote
 
-	db *ngindb.Database
-	active   *masternode.ActiveMasternode
-	mu       sync.Mutex
+	db     *ngindb.Database
+	active *masternode.ActiveMasternode
+	mu     sync.Mutex
 	// channels for fetcher, syncer, txsyncLoop
-	newPeerCh    chan *peer
+	newPeerCh chan *peer
 
 	IsMasternode uint32
 	srvr         *p2p.Server
@@ -49,7 +48,7 @@ func NewMasternodeManager(db *ngindb.Database, blockchain *core.BlockChain, txPo
 
 	// Create the masternode manager with its initial settings
 	manager := &MasternodeManager{
-		db:   db,
+		db:         db,
 		blockchain: blockchain,
 		beats:      make(map[common.Hash]time.Time),
 		Lifetime:   30 * time.Second,

@@ -161,38 +161,34 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	eraLen := big.NewInt(100000)
 	era := GetBlockEra(header.Number, eraLen)
 
-	wr := GetBlockWinnerRewardByEra(era) // wr "winner reward". = mnr + powr
-	//powr := new(big.Int).Div(wr, big.NewInt(2))
-	//mnr := new(big.Int).Div(wr, big.NewInt(2))
+	wr := GetBlockWinnerRewardByEra(era) // wr "winner reward".
 	dr := new(big.Int).Div(wr, big.NewInt(10))
 	wurs := GetBlockWinnerRewardForUnclesByEra(era, uncles) // wurs "winner uncle rewards"
-	//mnr := GetBlockMasterNodeRewardByEra(era, header, mns)
+	//mnrs := GetBlockWinnerRewardForMasterNodesByEra(era, mns) // mnrs "masternode rewards"
 
-	//wr.Add(wr, mnr)
-
+	wr.Add(wr, wurs)
+	//wr.Add(wr, mnrs)
 
 	// TODO:MN_Updates
-	//if era.Cmp(big.NewInt(6)) > 0 {
-	//	mnNum := len(mns)
+	//if era.Cmp(big.NewInt(100)) == 1 {
+	//	mnr := GetBlockMasterNodeRewardByEra(era, header, mns)
+	//	mnNum := len(mns) + 1
 	//	avg := mnr.Div(mnr, big.NewInt(int64(mnNum)))
 	//	for _, mn := range mns {
-	//		statedb.AddBalance(mn.Account, avg) // $$
+	//		statedb.AddBalance(mn, avg) // $$
 	//	}
 	//}
 
-	if era.Cmp(big.NewInt(5)) > 0 {
-		wr.Add(wr, dr)
+	statedb.AddBalance(header.Coinbase, wr) // $$w
+	if era.Cmp(big.NewInt(3)) == 1 {
 		statedb.AddBalance(d, dr) // $$w
 	}
 
 	// Reward uncle miners.
-	wr.Add(wr, wurs)
 	for _, uncle := range uncles {
 		ur := GetBlockUncleRewardByEra(era, header, uncle)
 		statedb.AddBalance(uncle.Coinbase, ur) // $$
 	}
-
-	statedb.AddBalance(header.Coinbase, wr) // $$w
 }
 
 // Uncle miners and winners are rewarded equally for each included block.

@@ -1,23 +1,22 @@
 package masternode
 
 import (
-	"net"
-	"sync"
 	"crypto/ecdsa"
 	"errors"
+	"net"
+	"sync"
 
+	"github.com/NginProject/ngind/common"
+	"github.com/NginProject/ngind/crypto"
 	"github.com/NginProject/ngind/p2p"
 	"github.com/NginProject/ngind/p2p/discover"
-	"github.com/NginProject/ngind/crypto"
-	"github.com/NginProject/ngind/common"
-
 )
 
 const (
-	ACTIVE_MASTERNODE_INITIAL         = 0 // initial state
-	ACTIVE_MASTERNODE_SYNCING         = 2
-	ACTIVE_MASTERNODE_NOT_CAPABLE     = 3
-	ACTIVE_MASTERNODE_STARTED         = 4
+	ACTIVE_MASTERNODE_INITIAL     = 0 // initial state
+	ACTIVE_MASTERNODE_SYNCING     = 2
+	ACTIVE_MASTERNODE_NOT_CAPABLE = 3
+	ACTIVE_MASTERNODE_STARTED     = 4
 )
 
 // ErrUnknownMasternode is returned for any requested operation for which no backend
@@ -64,7 +63,7 @@ func (a *ActiveMasternode) SignHash(id string, hash []byte) ([]byte, error) {
 	a.mu.RLock()
 	defer a.mu.RUnlock()
 
-	if id != a.ID{
+	if id != a.ID {
 		return nil, ErrUnknownMasternode
 	}
 	// Sign the hash using plain ECDSA operations

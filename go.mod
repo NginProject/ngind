@@ -18,7 +18,6 @@ require (
 	github.com/mailru/easyjson v0.0.0-20180823135443-60711f1a8329
 	github.com/microsoft/go-winio v0.4.11
 	github.com/nsf/termbox-go v0.0.0-20181027232701-60ab7e3d12ed // indirect
-	github.com/omeid/go-resources v0.0.0-20171025031226-ca9993b7d1a4 // indirect
 	github.com/onsi/gomega v1.4.2 // indirect
 	github.com/peterh/liner v1.1.0
 	github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a
@@ -29,7 +28,6 @@ require (
 	github.com/syndtr/goleveldb v0.0.0-20181105012736-f9080354173f
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
 	golang.org/x/net v0.0.0-20181011144130-49bb7cea24b1
-	golang.org/x/tools v0.0.0-20180904205237-0aa4b8830f48
 	gopkg.in/fatih/set.v0 v0.1.0
 	gopkg.in/karalabe/cookiejar.v2 v2.0.0-20150724131613-8dcd6a7f4951
 	gopkg.in/urfave/cli.v1 v1.17.0
