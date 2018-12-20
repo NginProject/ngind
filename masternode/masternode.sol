@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-contract Masternode {
+contract MN {
 
     uint256 constant MAX_BLOCK_REWARD = 10 * 10 ** 18;
     uint constant ERA_LEN = 100000;
