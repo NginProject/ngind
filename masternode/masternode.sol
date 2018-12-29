@@ -19,7 +19,7 @@ contract MN {
     function deposit() public payable {
         // append the address to list
         require(nodeList[msg.sender].balance + msg.value >= nodeList[msg.sender].balance);
-        require((msg.value + nodeList[msg.sender].balance) > 1 * 10 ** 18);
+        require((msg.value + nodeList[msg.sender].balance) > (block.number * 10 * 10 ** 18)/50);
         if (nodeList[msg.sender].balance == 0){
             addrList.push(msg.sender);
             addrNum = addrNum + 1 ;
@@ -41,8 +41,7 @@ contract MN {
     // check the amount whether reach the threhold when deposit
     function checkDeposit(address addr, uint256 amount) public view returns (bool) {
         require(block.number>=0);        
-        // return = (amount + nodeList[addr].balance) > (circulatingSupply(block.number) / 50); 
-        return (amount + nodeList[addr].balance) > 1 * 10 ** 18; // for Debug
+        return (amount + nodeList[addr].balance) > (circulatingSupply(block.number) / 50); 
     }
 
     // If anyone need withdraw, all ngin will be withdrawn. DO NOT DEL

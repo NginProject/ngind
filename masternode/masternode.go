@@ -6,7 +6,6 @@ package masternode
 import (
 	"math/big"
 	"strings"
-
 	"github.com/NginProject/ngind/accounts/abi"
 	"github.com/NginProject/ngind/accounts/abi/bind"
 	"github.com/NginProject/ngind/common"
@@ -27,9 +26,9 @@ var (
 const MNABI = "[{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"nodeList\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"},{\"name\":\"isActive\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"addrNum\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"addr\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"checkDeposit\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"addrList\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"h\",\"type\":\"uint256\"}],\"name\":\"circulatingSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"id2Node\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"},{\"name\":\"\",\"type\":\"uint256\"},{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"deposit\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"fallback\"}]"
 
 // MNBin is the compiled bytecode used for deploying new contracts.
-const MNBin = `0x608060405234801561001057600080fd5b506000600155610578806100256000396000f3fe608060405260043610610098576000357c010000000000000000000000000000000000000000000000000000000090048063804025641161006b578063804025641461016f57806392ff6aea146101b5578063cddb0c04146101df578063d0e30db01461023357610098565b806337befda41461009a5780633ccfd60b146100e65780636249fa96146100fb5780636fd3627614610122575b005b3480156100a657600080fd5b506100cd600480360360208110156100bd57600080fd5b5035600160a060020a031661023b565b6040805192835290151560208301528051918290030190f35b3480156100f257600080fd5b50610098610257565b34801561010757600080fd5b506101106102a8565b60408051918252519081900360200190f35b34801561012e57600080fd5b5061015b6004803603604081101561014557600080fd5b50600160a060020a0381351690602001356102ae565b604080519115158252519081900360200190f35b34801561017b57600080fd5b506101996004803603602081101561019257600080fd5b50356102e8565b60408051600160a060020a039092168252519081900360200190f35b3480156101c157600080fd5b50610110600480360360208110156101d857600080fd5b5035610310565b3480156101eb57600080fd5b506102096004803603602081101561020257600080fd5b5035610325565b60408051600160a060020a0390941684526020840192909252151582820152519081900360600190f35b610098610436565b6002602052600090815260409020805460019091015460ff1682565b3360008181526002602052604080822080548382556001909101805460ff19169055905190929183156108fc02918491818181858888f193505050501580156102a4573d6000803e3d6000fd5b5050565b60015481565b6000438111156102bd57600080fd5b50600160a060020a0391909116600090815260026020526040902054670de0b6b3a764000091011190565b60008054829081106102f657fe5b600091825260209091200154600160a060020a0316905081565b620186a0900469d3c21bcecceda10000000290565b600080600061038e60008581548110151561033c57fe5b60009182526020822001548154600160a060020a039091169160029181908990811061036457fe5b6000918252602080832090910154600160a060020a031683528201929092526040019020546102ae565b50600080548590811061039d57fe5b60009182526020822001548154600160a060020a03909116916002918190889081106103c557fe5b6000918252602080832090910154600160a060020a03168352820192909252604001812054815490916002918190899081106103fd57fe5b6000918252602080832090910154600160a060020a03168352820192909252604001902060010154919450925060ff1690509193909250565b33600090815260026020526040902054348101101561045457600080fd5b33600090815260026020526040902054670de0b6b3a7640000349091011161047b57600080fd5b3360009081526002602052604090205415156104e55760008054600181810183559180527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56301805473ffffffffffffffffffffffffffffffffffffffff1916331790558054810190555b336000818152600260205260409020805434019081905561050691906102ae565b1561052f573360009081526002602052604090206001908101805460ff1916909117905561054a565b336000908152600260205260409020600101805460ff191690555b56fea165627a7a72305820adfaca5133c591546fdce64d85c6c7e50dad1643bdce3970b338ee59495c210e0029`
+const MNBin = `0x608060405234801561001057600080fd5b50600060015561058d806100256000396000f3fe608060405260043610610098576000357c010000000000000000000000000000000000000000000000000000000090048063804025641161006b578063804025641461016f57806392ff6aea146101b5578063cddb0c04146101df578063d0e30db01461023357610098565b806337befda41461009a5780633ccfd60b146100e65780636249fa96146100fb5780636fd3627614610122575b005b3480156100a657600080fd5b506100cd600480360360208110156100bd57600080fd5b5035600160a060020a031661023b565b6040805192835290151560208301528051918290030190f35b3480156100f257600080fd5b50610098610257565b34801561010757600080fd5b506101106102a8565b60408051918252519081900360200190f35b34801561012e57600080fd5b5061015b6004803603604081101561014557600080fd5b50600160a060020a0381351690602001356102ae565b604080519115158252519081900360200190f35b34801561017b57600080fd5b506101996004803603602081101561019257600080fd5b50356102f8565b60408051600160a060020a039092168252519081900360200190f35b3480156101c157600080fd5b50610110600480360360208110156101d857600080fd5b5035610320565b3480156101eb57600080fd5b506102096004803603602081101561020257600080fd5b5035610335565b60408051600160a060020a0390941684526020840192909252151582820152519081900360600190f35b610098610446565b6002602052600090815260409020805460019091015460ff1682565b3360008181526002602052604080822080548382556001909101805460ff19169055905190929183156108fc02918491818181858888f193505050501580156102a4573d6000803e3d6000fd5b5050565b60015481565b6000438111156102bd57600080fd5b60326102c843610320565b8115156102d157fe5b600160a060020a039490941660009081526002602052604090205493049190920111919050565b600080548290811061030657fe5b600091825260209091200154600160a060020a0316905081565b620186a0900469d3c21bcecceda10000000290565b600080600061039e60008581548110151561034c57fe5b60009182526020822001548154600160a060020a039091169160029181908990811061037457fe5b6000918252602080832090910154600160a060020a031683528201929092526040019020546102ae565b5060008054859081106103ad57fe5b60009182526020822001548154600160a060020a03909116916002918190889081106103d557fe5b6000918252602080832090910154600160a060020a031683528201929092526040018120548154909160029181908990811061040d57fe5b6000918252602080832090910154600160a060020a03168352820192909252604001902060010154919450925060ff1690509193909250565b33600090815260026020526040902054348101101561046457600080fd5b33600090815260026020526040902054603243678ac7230489e800000204349091011161049057600080fd5b3360009081526002602052604090205415156104fa5760008054600181810183559180527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56301805473ffffffffffffffffffffffffffffffffffffffff1916331790558054810190555b336000818152600260205260409020805434019081905561051b91906102ae565b15610544573360009081526002602052604090206001908101805460ff1916909117905561055f565b336000908152600260205260409020600101805460ff191690555b56fea165627a7a723058204dad47fd69761f463ee313a1e6f819f1d5e20ee2a697055c064ec55138141cbe0029`
 
-// DeployMN deploys a new Ngin contract, binding an instance of MN to it.
+// DeployMN deploys a new Ethereum contract, binding an instance of MN to it.
 func DeployMN(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *MN, error) {
 	parsed, err := abi.JSON(strings.NewReader(MNABI))
 	if err != nil {
@@ -42,29 +41,29 @@ func DeployMN(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Add
 	return address, tx, &MN{MNCaller: MNCaller{contract: contract}, MNTransactor: MNTransactor{contract: contract}, MNFilterer: MNFilterer{contract: contract}}, nil
 }
 
-// MN is an auto generated Go binding around a Ngin contract.
+// MN is an auto generated Go binding around an Ethereum contract.
 type MN struct {
 	MNCaller     // Read-only binding to the contract
 	MNTransactor // Write-only binding to the contract
 	MNFilterer   // Log filterer for contract events
 }
 
-// MNCaller is an auto generated read-only Go binding around a Ngin contract.
+// MNCaller is an auto generated read-only Go binding around an Ethereum contract.
 type MNCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// MNTransactor is an auto generated write-only Go binding around a Ngin contract.
+// MNTransactor is an auto generated write-only Go binding around an Ethereum contract.
 type MNTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// MNFilterer is an auto generated log filtering Go binding around a Ngin contract events.
+// MNFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
 type MNFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// MNSession is an auto generated Go binding around a Ngin contract,
+// MNSession is an auto generated Go binding around an Ethereum contract,
 // with pre-set call and transact options.
 type MNSession struct {
 	Contract     *MN               // Generic contract binding to set the session for
@@ -72,31 +71,31 @@ type MNSession struct {
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// MNCallerSession is an auto generated read-only Go binding around a Ngin contract,
+// MNCallerSession is an auto generated read-only Go binding around an Ethereum contract,
 // with pre-set call options.
 type MNCallerSession struct {
 	Contract *MNCaller     // Generic contract caller binding to set the session for
 	CallOpts bind.CallOpts // Call options to use throughout this session
 }
 
-// MNTransactorSession is an auto generated write-only Go binding around a Ngin contract,
+// MNTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
 // with pre-set transact options.
 type MNTransactorSession struct {
 	Contract     *MNTransactor     // Generic contract transactor binding to set the session for
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// MNRaw is an auto generated low-level Go binding around a Ngin contract.
+// MNRaw is an auto generated low-level Go binding around an Ethereum contract.
 type MNRaw struct {
 	Contract *MN // Generic contract binding to access the raw methods on
 }
 
-// MNCallerRaw is an auto generated low-level read-only Go binding around a Ngin contract.
+// MNCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
 type MNCallerRaw struct {
 	Contract *MNCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// MNTransactorRaw is an auto generated low-level write-only Go binding around a Ngin contract.
+// MNTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
 type MNTransactorRaw struct {
 	Contract *MNTransactor // Generic write-only contract binding to access the raw methods on
 }
