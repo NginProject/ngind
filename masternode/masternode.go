@@ -1,24 +1,35 @@
-// This file is an automatically generated Go binding. Do not modify as any
-// change will likely be lost upon the next re-generation!
+// Code generated - DO NOT EDIT.
+// This file is a generated binding and any manual changes will be lost.
 
 package masternode
 
 import (
+	"math/big"
+	"strings"
+
 	"github.com/NginProject/ngind/accounts/abi"
 	"github.com/NginProject/ngind/accounts/abi/bind"
 	"github.com/NginProject/ngind/common"
 	"github.com/NginProject/ngind/core/types"
-	"math/big"
-	"strings"
+)
+
+// Reference imports to suppress errors if they are not otherwise used.
+var (
+	_ = big.NewInt
+	_ = strings.NewReader
+	_ = abi.U256
+	_ = bind.Bind
+	_ = common.Big1
+	_ = types.BloomLookup
 )
 
 // MNABI is the input ABI used to generate the binding from.
-const MNABI = `[{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"nodeList","outputs":[{"name":"balance","type":"uint256"},{"name":"isActive","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"account","type":"address"},{"name":"amount","type":"uint256"},{"name":"h","type":"uint256"}],"name":"checkDeposit","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"updateStatus","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"itList","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"h","type":"uint256"}],"name":"circulatingSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"deposit","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_account","type":"address"}],"name":"Active","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_account","type":"address"}],"name":"Deactive","type":"event"}]`
+const MNABI = "[{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"nodeList\",\"outputs\":[{\"name\":\"balance\",\"type\":\"uint256\"},{\"name\":\"isActive\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"withdraw\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"addrNum\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"addr\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"checkDeposit\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"addrList\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"h\",\"type\":\"uint256\"}],\"name\":\"circulatingSupply\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"pure\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"id\",\"type\":\"uint256\"}],\"name\":\"id2Node\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"},{\"name\":\"\",\"type\":\"uint256\"},{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"deposit\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"fallback\"}]"
 
 // MNBin is the compiled bytecode used for deploying new contracts.
-const MNBin = `0x608060405234801561001057600080fd5b50610681806100206000396000f3fe60806040526004361061007c577c0100000000000000000000000000000000000000000000000000000000600035046337befda481146100865780633ccfd60b146100d25780634a7e60f0146100e75780635f60f4851461013a578063649862ee1461014f57806392ff6aea14610195578063b6b55f25146101d1575b6100846101ee565b005b34801561009257600080fd5b506100b9600480360360208110156100a957600080fd5b5035600160a060020a03166102f8565b6040805192835290151560208301528051918290030190f35b3480156100de57600080fd5b50610084610314565b3480156100f357600080fd5b506101266004803603606081101561010a57600080fd5b50600160a060020a0381351690602081013590604001356103e8565b604080519115158252519081900360200190f35b34801561014657600080fd5b506100846101ee565b34801561015b57600080fd5b506101796004803603602081101561017257600080fd5b5035610429565b60408051600160a060020a039092168252519081900360200190f35b3480156101a157600080fd5b506101bf600480360360208110156101b857600080fd5b5035610451565b60408051918252519081900360200190f35b610084600480360360208110156101e757600080fd5b50356104de565b60005b6000548110156102f55761024d60008281548110151561020d57fe5b60009182526020822001548154600160a060020a0390911691908490811061023157fe5b600091825260209091200154600160a060020a031631436103e8565b156102a1576001806000808481548110151561026557fe5b600091825260208083209190910154600160a060020a031683528201929092526040019020600101805460ff19169115159190911790556102ed565b60006001600080848154811015156102b557fe5b600091825260208083209190910154600160a060020a031683528201929092526040019020600101805460ff19169115159190911790555b6001016101f1565b50565b6001602081905260009182526040909120805491015460ff1682565b3360008181526001602052604080822054905190929183156108fc02918491818181858888f19350505050158015610350573d6000803e3d6000fd5b5060005b6000548110156103c757600080543391908390811061036f57fe5b600091825260209091200154600160a060020a031614156103bf57600080548290811061039857fe5b6000918252602090912001805473ffffffffffffffffffffffffffffffffffffffff191690555b600101610354565b5050336000908152600160208190526040822091825501805460ff19169055565b60008060326103f684610451565b8115156103ff57fe5b600160a060020a038716600090815260016020526040902054919004908501119150509392505050565b600080548290811061043757fe5b600091825260209091200154600160a060020a0316905081565b6000620186a0820481805b8281116104d657828114156104a75760008160fa0a8260f90a81151561047e57fe5b04678ac7230489e80000029050620186a084028681151561049b57fe5b060291909101906104ce565b60008160fa0a8260f90a8115156104ba57fe5b0469d3c21bcecceda1000000029290920191505b60010161045c565b509392505050565b34811461054c57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601b60248201527f4572726f723a2077726f6e67206465706f73697420616d6f756e740000000000604482015290519081900360640190fd5b600160005b60005481101561059857600080543391908390811061056c57fe5b600091825260209091200154600160a060020a031614156105905760009150610598565b600101610551565b5080156105ec57600080546001810182559080527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56301805473ffffffffffffffffffffffffffffffffffffffff1916331790555b33600081815260016020526040902080548401905561060c9083436103e8565b15610635573360009081526001602081905260409091208101805460ff19169091179055610651565b33600090815260016020819052604090912001805460ff191690555b505056fea165627a7a7230582023f0eb3faadace18ed4bea7081844d9b0f83568ce3b5ad4dfa391f61f37e2b7c0029`
+const MNBin = `0x608060405234801561001057600080fd5b506000600155610578806100256000396000f3fe608060405260043610610098576000357c010000000000000000000000000000000000000000000000000000000090048063804025641161006b578063804025641461016f57806392ff6aea146101b5578063cddb0c04146101df578063d0e30db01461023357610098565b806337befda41461009a5780633ccfd60b146100e65780636249fa96146100fb5780636fd3627614610122575b005b3480156100a657600080fd5b506100cd600480360360208110156100bd57600080fd5b5035600160a060020a031661023b565b6040805192835290151560208301528051918290030190f35b3480156100f257600080fd5b50610098610257565b34801561010757600080fd5b506101106102a8565b60408051918252519081900360200190f35b34801561012e57600080fd5b5061015b6004803603604081101561014557600080fd5b50600160a060020a0381351690602001356102ae565b604080519115158252519081900360200190f35b34801561017b57600080fd5b506101996004803603602081101561019257600080fd5b50356102e8565b60408051600160a060020a039092168252519081900360200190f35b3480156101c157600080fd5b50610110600480360360208110156101d857600080fd5b5035610310565b3480156101eb57600080fd5b506102096004803603602081101561020257600080fd5b5035610325565b60408051600160a060020a0390941684526020840192909252151582820152519081900360600190f35b610098610436565b6002602052600090815260409020805460019091015460ff1682565b3360008181526002602052604080822080548382556001909101805460ff19169055905190929183156108fc02918491818181858888f193505050501580156102a4573d6000803e3d6000fd5b5050565b60015481565b6000438111156102bd57600080fd5b50600160a060020a0391909116600090815260026020526040902054670de0b6b3a764000091011190565b60008054829081106102f657fe5b600091825260209091200154600160a060020a0316905081565b620186a0900469d3c21bcecceda10000000290565b600080600061038e60008581548110151561033c57fe5b60009182526020822001548154600160a060020a039091169160029181908990811061036457fe5b6000918252602080832090910154600160a060020a031683528201929092526040019020546102ae565b50600080548590811061039d57fe5b60009182526020822001548154600160a060020a03909116916002918190889081106103c557fe5b6000918252602080832090910154600160a060020a03168352820192909252604001812054815490916002918190899081106103fd57fe5b6000918252602080832090910154600160a060020a03168352820192909252604001902060010154919450925060ff1690509193909250565b33600090815260026020526040902054348101101561045457600080fd5b33600090815260026020526040902054670de0b6b3a7640000349091011161047b57600080fd5b3360009081526002602052604090205415156104e55760008054600181810183559180527f290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e56301805473ffffffffffffffffffffffffffffffffffffffff1916331790558054810190555b336000818152600260205260409020805434019081905561050691906102ae565b1561052f573360009081526002602052604090206001908101805460ff1916909117905561054a565b336000908152600260205260409020600101805460ff191690555b56fea165627a7a72305820adfaca5133c591546fdce64d85c6c7e50dad1643bdce3970b338ee59495c210e0029`
 
-// DeployMN deploys a new Ethereum contract, binding an instance of MN to it.
+// DeployMN deploys a new Ngin contract, binding an instance of MN to it.
 func DeployMN(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *MN, error) {
 	parsed, err := abi.JSON(strings.NewReader(MNABI))
 	if err != nil {
@@ -28,26 +39,32 @@ func DeployMN(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Add
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	return address, tx, &MN{MNCaller: MNCaller{contract: contract}, MNTransactor: MNTransactor{contract: contract}}, nil
+	return address, tx, &MN{MNCaller: MNCaller{contract: contract}, MNTransactor: MNTransactor{contract: contract}, MNFilterer: MNFilterer{contract: contract}}, nil
 }
 
-// MN is an auto generated Go binding around an Ethereum contract.
+// MN is an auto generated Go binding around a Ngin contract.
 type MN struct {
 	MNCaller     // Read-only binding to the contract
 	MNTransactor // Write-only binding to the contract
+	MNFilterer   // Log filterer for contract events
 }
 
-// MNCaller is an auto generated read-only Go binding around an Ethereum contract.
+// MNCaller is an auto generated read-only Go binding around a Ngin contract.
 type MNCaller struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// MNTransactor is an auto generated write-only Go binding around an Ethereum contract.
+// MNTransactor is an auto generated write-only Go binding around a Ngin contract.
 type MNTransactor struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
-// MNSession is an auto generated Go binding around an Ethereum contract,
+// MNFilterer is an auto generated log filtering Go binding around a Ngin contract events.
+type MNFilterer struct {
+	contract *bind.BoundContract // Generic contract wrapper for the low level calls
+}
+
+// MNSession is an auto generated Go binding around a Ngin contract,
 // with pre-set call and transact options.
 type MNSession struct {
 	Contract     *MN               // Generic contract binding to set the session for
@@ -55,47 +72,47 @@ type MNSession struct {
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// MNCallerSession is an auto generated read-only Go binding around an Ethereum contract,
+// MNCallerSession is an auto generated read-only Go binding around a Ngin contract,
 // with pre-set call options.
 type MNCallerSession struct {
 	Contract *MNCaller     // Generic contract caller binding to set the session for
 	CallOpts bind.CallOpts // Call options to use throughout this session
 }
 
-// MNTransactorSession is an auto generated write-only Go binding around an Ethereum contract,
+// MNTransactorSession is an auto generated write-only Go binding around a Ngin contract,
 // with pre-set transact options.
 type MNTransactorSession struct {
 	Contract     *MNTransactor     // Generic contract transactor binding to set the session for
 	TransactOpts bind.TransactOpts // Transaction auth options to use throughout this session
 }
 
-// MNRaw is an auto generated low-level Go binding around an Ethereum contract.
+// MNRaw is an auto generated low-level Go binding around a Ngin contract.
 type MNRaw struct {
 	Contract *MN // Generic contract binding to access the raw methods on
 }
 
-// MNCallerRaw is an auto generated low-level read-only Go binding around an Ethereum contract.
+// MNCallerRaw is an auto generated low-level read-only Go binding around a Ngin contract.
 type MNCallerRaw struct {
 	Contract *MNCaller // Generic read-only contract binding to access the raw methods on
 }
 
-// MNTransactorRaw is an auto generated low-level write-only Go binding around an Ethereum contract.
+// MNTransactorRaw is an auto generated low-level write-only Go binding around a Ngin contract.
 type MNTransactorRaw struct {
 	Contract *MNTransactor // Generic write-only contract binding to access the raw methods on
 }
 
 // NewMN creates a new instance of MN, bound to a specific deployed contract.
 func NewMN(address common.Address, backend bind.ContractBackend) (*MN, error) {
-	contract, err := bindMN(address, backend.(bind.ContractCaller), backend.(bind.ContractTransactor))
+	contract, err := bindMN(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &MN{MNCaller: MNCaller{contract: contract}, MNTransactor: MNTransactor{contract: contract}}, nil
+	return &MN{MNCaller: MNCaller{contract: contract}, MNTransactor: MNTransactor{contract: contract}, MNFilterer: MNFilterer{contract: contract}}, nil
 }
 
 // NewMNCaller creates a new read-only instance of MN, bound to a specific deployed contract.
 func NewMNCaller(address common.Address, caller bind.ContractCaller) (*MNCaller, error) {
-	contract, err := bindMN(address, caller, nil)
+	contract, err := bindMN(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -104,20 +121,29 @@ func NewMNCaller(address common.Address, caller bind.ContractCaller) (*MNCaller,
 
 // NewMNTransactor creates a new write-only instance of MN, bound to a specific deployed contract.
 func NewMNTransactor(address common.Address, transactor bind.ContractTransactor) (*MNTransactor, error) {
-	contract, err := bindMN(address, nil, transactor)
+	contract, err := bindMN(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
 	return &MNTransactor{contract: contract}, nil
 }
 
+// NewMNFilterer creates a new log filterer instance of MN, bound to a specific deployed contract.
+func NewMNFilterer(address common.Address, filterer bind.ContractFilterer) (*MNFilterer, error) {
+	contract, err := bindMN(address, nil, nil, filterer)
+	if err != nil {
+		return nil, err
+	}
+	return &MNFilterer{contract: contract}, nil
+}
+
 // bindMN binds a generic wrapper to an already deployed contract.
-func bindMN(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor) (*bind.BoundContract, error) {
+func bindMN(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
 	parsed, err := abi.JSON(strings.NewReader(MNABI))
 	if err != nil {
 		return nil, err
 	}
-	return bind.NewBoundContract(address, parsed, caller, transactor), nil
+	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
 }
 
 // Call invokes the (constant) contract method with params as input values and
@@ -158,30 +184,82 @@ func (_MN *MNTransactorRaw) Transact(opts *bind.TransactOpts, method string, par
 	return _MN.Contract.contract.Transact(opts, method, params...)
 }
 
-// CheckDeposit is a free data retrieval call binding the contract method 0x4a7e60f0.
+// AddrList is a free data retrieval call binding the contract method 0x80402564.
 //
-// Solidity: function checkDeposit(account address, amount uint256, h uint256) constant returns(bool)
-func (_MN *MNCaller) CheckDeposit(opts *bind.CallOpts, account common.Address, amount *big.Int, h *big.Int) (bool, error) {
+// Solidity: function addrList( uint256) constant returns(address)
+func (_MN *MNCaller) AddrList(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
+	var (
+		ret0 = new(common.Address)
+	)
+	out := ret0
+	err := _MN.contract.Call(opts, out, "addrList", arg0)
+	return *ret0, err
+}
+
+// AddrList is a free data retrieval call binding the contract method 0x80402564.
+//
+// Solidity: function addrList( uint256) constant returns(address)
+func (_MN *MNSession) AddrList(arg0 *big.Int) (common.Address, error) {
+	return _MN.Contract.AddrList(&_MN.CallOpts, arg0)
+}
+
+// AddrList is a free data retrieval call binding the contract method 0x80402564.
+//
+// Solidity: function addrList( uint256) constant returns(address)
+func (_MN *MNCallerSession) AddrList(arg0 *big.Int) (common.Address, error) {
+	return _MN.Contract.AddrList(&_MN.CallOpts, arg0)
+}
+
+// AddrNum is a free data retrieval call binding the contract method 0x6249fa96.
+//
+// Solidity: function addrNum() constant returns(uint256)
+func (_MN *MNCaller) AddrNum(opts *bind.CallOpts) (*big.Int, error) {
+	var (
+		ret0 = new(*big.Int)
+	)
+	out := ret0
+	err := _MN.contract.Call(opts, out, "addrNum")
+	return *ret0, err
+}
+
+// AddrNum is a free data retrieval call binding the contract method 0x6249fa96.
+//
+// Solidity: function addrNum() constant returns(uint256)
+func (_MN *MNSession) AddrNum() (*big.Int, error) {
+	return _MN.Contract.AddrNum(&_MN.CallOpts)
+}
+
+// AddrNum is a free data retrieval call binding the contract method 0x6249fa96.
+//
+// Solidity: function addrNum() constant returns(uint256)
+func (_MN *MNCallerSession) AddrNum() (*big.Int, error) {
+	return _MN.Contract.AddrNum(&_MN.CallOpts)
+}
+
+// CheckDeposit is a free data retrieval call binding the contract method 0x6fd36276.
+//
+// Solidity: function checkDeposit(addr address, amount uint256) constant returns(bool)
+func (_MN *MNCaller) CheckDeposit(opts *bind.CallOpts, addr common.Address, amount *big.Int) (bool, error) {
 	var (
 		ret0 = new(bool)
 	)
 	out := ret0
-	err := _MN.contract.Call(opts, out, "checkDeposit", account, amount, h)
+	err := _MN.contract.Call(opts, out, "checkDeposit", addr, amount)
 	return *ret0, err
 }
 
-// CheckDeposit is a free data retrieval call binding the contract method 0x4a7e60f0.
+// CheckDeposit is a free data retrieval call binding the contract method 0x6fd36276.
 //
-// Solidity: function checkDeposit(account address, amount uint256, h uint256) constant returns(bool)
-func (_MN *MNSession) CheckDeposit(account common.Address, amount *big.Int, h *big.Int) (bool, error) {
-	return _MN.Contract.CheckDeposit(&_MN.CallOpts, account, amount, h)
+// Solidity: function checkDeposit(addr address, amount uint256) constant returns(bool)
+func (_MN *MNSession) CheckDeposit(addr common.Address, amount *big.Int) (bool, error) {
+	return _MN.Contract.CheckDeposit(&_MN.CallOpts, addr, amount)
 }
 
-// CheckDeposit is a free data retrieval call binding the contract method 0x4a7e60f0.
+// CheckDeposit is a free data retrieval call binding the contract method 0x6fd36276.
 //
-// Solidity: function checkDeposit(account address, amount uint256, h uint256) constant returns(bool)
-func (_MN *MNCallerSession) CheckDeposit(account common.Address, amount *big.Int, h *big.Int) (bool, error) {
-	return _MN.Contract.CheckDeposit(&_MN.CallOpts, account, amount, h)
+// Solidity: function checkDeposit(addr address, amount uint256) constant returns(bool)
+func (_MN *MNCallerSession) CheckDeposit(addr common.Address, amount *big.Int) (bool, error) {
+	return _MN.Contract.CheckDeposit(&_MN.CallOpts, addr, amount)
 }
 
 // CirculatingSupply is a free data retrieval call binding the contract method 0x92ff6aea.
@@ -210,30 +288,36 @@ func (_MN *MNCallerSession) CirculatingSupply(h *big.Int) (*big.Int, error) {
 	return _MN.Contract.CirculatingSupply(&_MN.CallOpts, h)
 }
 
-// ItList is a free data retrieval call binding the contract method 0x649862ee.
+// Id2Node is a free data retrieval call binding the contract method 0xcddb0c04.
 //
-// Solidity: function itList( uint256) constant returns(address)
-func (_MN *MNCaller) ItList(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
+// Solidity: function id2Node(id uint256) constant returns(address, uint256, bool)
+func (_MN *MNCaller) Id2Node(opts *bind.CallOpts, id *big.Int) (common.Address, *big.Int, bool, error) {
 	var (
 		ret0 = new(common.Address)
+		ret1 = new(*big.Int)
+		ret2 = new(bool)
 	)
-	out := ret0
-	err := _MN.contract.Call(opts, out, "itList", arg0)
-	return *ret0, err
+	out := &[]interface{}{
+		ret0,
+		ret1,
+		ret2,
+	}
+	err := _MN.contract.Call(opts, out, "id2Node", id)
+	return *ret0, *ret1, *ret2, err
 }
 
-// ItList is a free data retrieval call binding the contract method 0x649862ee.
+// Id2Node is a free data retrieval call binding the contract method 0xcddb0c04.
 //
-// Solidity: function itList( uint256) constant returns(address)
-func (_MN *MNSession) ItList(arg0 *big.Int) (common.Address, error) {
-	return _MN.Contract.ItList(&_MN.CallOpts, arg0)
+// Solidity: function id2Node(id uint256) constant returns(address, uint256, bool)
+func (_MN *MNSession) Id2Node(id *big.Int) (common.Address, *big.Int, bool, error) {
+	return _MN.Contract.Id2Node(&_MN.CallOpts, id)
 }
 
-// ItList is a free data retrieval call binding the contract method 0x649862ee.
+// Id2Node is a free data retrieval call binding the contract method 0xcddb0c04.
 //
-// Solidity: function itList( uint256) constant returns(address)
-func (_MN *MNCallerSession) ItList(arg0 *big.Int) (common.Address, error) {
-	return _MN.Contract.ItList(&_MN.CallOpts, arg0)
+// Solidity: function id2Node(id uint256) constant returns(address, uint256, bool)
+func (_MN *MNCallerSession) Id2Node(id *big.Int) (common.Address, *big.Int, bool, error) {
+	return _MN.Contract.Id2Node(&_MN.CallOpts, id)
 }
 
 // NodeList is a free data retrieval call binding the contract method 0x37befda4.
@@ -272,46 +356,25 @@ func (_MN *MNCallerSession) NodeList(arg0 common.Address) (struct {
 	return _MN.Contract.NodeList(&_MN.CallOpts, arg0)
 }
 
-// Deposit is a paid mutator transaction binding the contract method 0xb6b55f25.
+// Deposit is a paid mutator transaction binding the contract method 0xd0e30db0.
 //
-// Solidity: function deposit(amount uint256) returns()
-func (_MN *MNTransactor) Deposit(opts *bind.TransactOpts, amount *big.Int) (*types.Transaction, error) {
-	return _MN.contract.Transact(opts, "deposit", amount)
+// Solidity: function deposit() returns()
+func (_MN *MNTransactor) Deposit(opts *bind.TransactOpts) (*types.Transaction, error) {
+	return _MN.contract.Transact(opts, "deposit")
 }
 
-// Deposit is a paid mutator transaction binding the contract method 0xb6b55f25.
+// Deposit is a paid mutator transaction binding the contract method 0xd0e30db0.
 //
-// Solidity: function deposit(amount uint256) returns()
-func (_MN *MNSession) Deposit(amount *big.Int) (*types.Transaction, error) {
-	return _MN.Contract.Deposit(&_MN.TransactOpts, amount)
+// Solidity: function deposit() returns()
+func (_MN *MNSession) Deposit() (*types.Transaction, error) {
+	return _MN.Contract.Deposit(&_MN.TransactOpts)
 }
 
-// Deposit is a paid mutator transaction binding the contract method 0xb6b55f25.
+// Deposit is a paid mutator transaction binding the contract method 0xd0e30db0.
 //
-// Solidity: function deposit(amount uint256) returns()
-func (_MN *MNTransactorSession) Deposit(amount *big.Int) (*types.Transaction, error) {
-	return _MN.Contract.Deposit(&_MN.TransactOpts, amount)
-}
-
-// UpdateStatus is a paid mutator transaction binding the contract method 0x5f60f485.
-//
-// Solidity: function updateStatus() returns()
-func (_MN *MNTransactor) UpdateStatus(opts *bind.TransactOpts) (*types.Transaction, error) {
-	return _MN.contract.Transact(opts, "updateStatus")
-}
-
-// UpdateStatus is a paid mutator transaction binding the contract method 0x5f60f485.
-//
-// Solidity: function updateStatus() returns()
-func (_MN *MNSession) UpdateStatus() (*types.Transaction, error) {
-	return _MN.Contract.UpdateStatus(&_MN.TransactOpts)
-}
-
-// UpdateStatus is a paid mutator transaction binding the contract method 0x5f60f485.
-//
-// Solidity: function updateStatus() returns()
-func (_MN *MNTransactorSession) UpdateStatus() (*types.Transaction, error) {
-	return _MN.Contract.UpdateStatus(&_MN.TransactOpts)
+// Solidity: function deposit() returns()
+func (_MN *MNTransactorSession) Deposit() (*types.Transaction, error) {
+	return _MN.Contract.Deposit(&_MN.TransactOpts)
 }
 
 // Withdraw is a paid mutator transaction binding the contract method 0x3ccfd60b.
