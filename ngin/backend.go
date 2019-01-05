@@ -22,6 +22,8 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/NginProject/ngind/masternode"
+	"github.com/NginProject/ngind/masternode/contract"
 	"math/big"
 	"strconv"
 	"sync"
@@ -293,6 +295,12 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 	if ngin.protocolManager, err = NewProtocolManager(ngin.chainConfig, m, uint64(config.NetworkId), ngin.eventMux, ngin.txPool, ngin.pow, ngin.blockchain, chainDb); err != nil {
 		return nil, err
 	}
+
+	// Enable Masternode on Ngin Network
+	contractBackend := NewContractBackend(ngin)
+	contractMN, err := contract.NewMN(common.BytesToAddress([]byte{55, 2, 110, 138, 23, 236, 228, 83, 92, 173, 52, 239, 194, 152, 52, 229, 137, 196, 8, 24}), contractBackend)
+	masternode.GetNodeList(contractMN)
+
 	ngin.miner = miner.New(ngin, ngin.chainConfig, ngin.EventMux(), ngin.pow)
 	if err = ngin.miner.SetGasPrice(config.GasPrice); err != nil {
 		return nil, err
