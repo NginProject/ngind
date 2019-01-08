@@ -22,7 +22,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/NginProject/ngind/masternode"
 	"github.com/NginProject/ngind/masternode/contract"
 	"math/big"
 	"strconv"
@@ -128,6 +127,8 @@ type Ngin struct {
 	coinbase      common.Address
 	netVersionId  int
 	netRPCService *PublicNetAPI
+
+	masternodeManager *MasternodeManager
 }
 
 func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
@@ -296,10 +297,15 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 		return nil, err
 	}
 
+	mnDB, err:= ngindb.NewMemDatabase()
+
 	// Enable Masternode on Ngin Network
 	contractBackend := NewContractBackend(ngin)
 	contractMN, err := contract.NewMN(common.BytesToAddress([]byte{55, 2, 110, 138, 23, 236, 228, 83, 92, 173, 52, 239, 194, 152, 52, 229, 137, 196, 8, 24}), contractBackend)
-	masternode.GetNodeList(contractMN)
+	if ngin.masternodeManager = NewMasternodeManager(mnDB, ngin.blockchain, contractMN, ngin.txPool); err != nil {
+		return nil, err
+	}
+	ngin.protocolManager.mm = ngin.masternodeManager
 
 	ngin.miner = miner.New(ngin, ngin.chainConfig, ngin.EventMux(), ngin.pow)
 	if err = ngin.miner.SetGasPrice(config.GasPrice); err != nil {

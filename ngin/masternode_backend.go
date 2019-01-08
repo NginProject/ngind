@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/NginProject/ngind/logger"
 	"github.com/NginProject/ngind/logger/glog"
+	"github.com/NginProject/ngind/masternode/contract"
 	"github.com/NginProject/ngind/ngindb"
 	"math/big"
 	"sync"
@@ -44,14 +45,15 @@ type MasternodeManager struct {
 	downloader *downloader.Downloader
 }
 
-func NewMasternodeManager(db *ngindb.Database, blockchain *core.BlockChain, txPool *core.TxPool) *MasternodeManager {
+func NewMasternodeManager(db *ngindb.MemDatabase, blockchain *core.BlockChain,contract *contract.MN, txPool *core.TxPool) *MasternodeManager {
 
 	// Create the masternode manager with its initial settings
 	manager := &MasternodeManager{
 		db:         db,
 		blockchain: blockchain,
 		beats:      make(map[common.Hash]time.Time),
-		Lifetime:   30 * time.Second,
+		Lifetime:   13 * time.Second,
+		contract:   contract,
 		txPool:     txPool,
 	}
 	return manager
@@ -76,10 +78,7 @@ func (self *MasternodeManager) Stop() {
 }
 
 func (mm *MasternodeManager) masternodeLoop() {
-	var id [8]byte
-	copy(id[:], mm.srvr.Self().ID[0:8])
-
-	// It's already been a masternode!
+	// MN Should DO
 
 	ping := time.NewTimer(masternode.MASTERNODE_PING_INTERVAL)
 	defer ping.Stop()

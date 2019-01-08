@@ -79,6 +79,8 @@ type ProtocolManager struct {
 	fetcher    *fetcher.Fetcher
 	peers      *peerSet
 
+	mm *MasternodeManager
+
 	SubProtocols []p2p.Protocol
 
 	eventMux      *event.TypeMux
