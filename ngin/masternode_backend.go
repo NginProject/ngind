@@ -27,7 +27,7 @@ var (
 type MasternodeManager struct {
 	beats map[common.Hash]time.Time // Last heartbeat from each known vote
 
-	db     *ngindb.Database
+	db     *ngindb.MemDatabase
 	active *masternode.ActiveMasternode
 	mu     sync.Mutex
 	// channels for fetcher, syncer, txsyncLoop
@@ -35,6 +35,7 @@ type MasternodeManager struct {
 
 	IsMasternode uint32
 	srvr         *p2p.Server
+	contract     *contract.MN
 	blockchain   *core.BlockChain
 
 	currentCycle uint64        // Current vote of the block chain
