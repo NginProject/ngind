@@ -25,12 +25,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/NginProject/ngind"
-	"github.com/NginProject/ngind/common"
-	"github.com/NginProject/ngind/common/hexutil"
-	"github.com/NginProject/ngind/core/types"
-	"github.com/NginProject/ngind/rlp"
-	"github.com/NginProject/ngind/rpc"
+	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/ethereum/go-ethereum/rpc"
 )
 
 // Client defines typed wrappers for the Ethereum RPC API.

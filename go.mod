@@ -4,13 +4,16 @@ require (
 	github.com/NginProject/M00N v0.0.0-20181108184447-9a3eac40300a
 	github.com/NginProject/sputnikvm-ffi v0.0.0-20180910131407-7b0cdf94d93f
 	github.com/StackExchange/wmi v0.0.0-20180725035823-b12b22c5341f
+	github.com/allegro/bigcache v1.1.0 // indirect
 	github.com/boltdb/bolt v1.3.1
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.0
+	github.com/ethereum/go-ethereum v1.8.20 // indirect
 	github.com/ethereumproject/benchmark v0.0.0-20180113190147-8eff34efba25
 	github.com/fatih/color v1.7.0
 	github.com/gizak/termui v2.2.0+incompatible
 	github.com/go-ole/go-ole v1.2.1 // indirect
+	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.0
 	github.com/huin/goupnp v1.0.0
 	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
