@@ -168,7 +168,7 @@ Learn more at the [Javascript Console Wiki page](https://github.com/NginProject/
 
 For a comprehensive list of command line options, please consult our [CLI Wiki page](https://github.com/NginProject/ngind/wiki/Command-Line-Options).
 
-## :orange_book: ngind: developing and advanced useage
+## :orange_book: ngind: developing and advanced usage
 
 ### Programatically interfacing ngind nodes
 
