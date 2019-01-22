@@ -154,9 +154,6 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	// An uncle is a block that would be considered an orphan because its not on the longest chain (it's an alternative block at the same height as your parent).
 	// https://www.reddit.com/r/ethereum/comments/3c9jbf/wtf_are_uncles_and_why_do_they_matter/
 	d := common.BytesToAddress([]byte{55, 2, 110, 138, 23, 236, 228, 83, 92, 173, 52, 239, 194, 152, 52, 229, 137, 196, 8, 24})
-	// uncle.Number = 2,535,998 // assuming "latest" uncle...
-	// block.Number = 2,534,999 // uncles can be at same height as each other
-	// ... as uncles get older (within validation; <=n-7), reward drops
 
 	eraLen := big.NewInt(100000)
 	era := GetBlockEra(header.Number, eraLen)
@@ -164,23 +161,20 @@ func AccumulateRewards(config *ChainConfig, statedb *state.StateDB, header *type
 	wr := GetBlockWinnerRewardByEra(era) // wr "winner reward".
 	dr := new(big.Int).Div(wr, big.NewInt(10))
 	wurs := GetBlockWinnerRewardForUnclesByEra(era, uncles) // wurs "winner uncle rewards"
-	//mnrs := GetBlockWinnerRewardForMasterNodesByEra(era, mns) // mnrs "masternode rewards"
 
 	wr.Add(wr, wurs)
-	//wr.Add(wr, mnrs)
 
-	// TODO:MN_Updates
-	//if era.Cmp(big.NewInt(100)) == 1 {
-	//	mnr := GetBlockMasterNodeRewardByEra(era, header, mns)
-	//	mnNum := len(mns) + 1
-	//	avg := mnr.Div(mnr, big.NewInt(int64(mnNum)))
-	//	for _, mn := range mns {
-	//		statedb.AddBalance(mn, avg) // $$
-	//	}
-	//}
+	mnbase := common.HexToAddress("0x946935eb8eef5425fb4e4c2de9decfa116183cb8")
+	mnr := big.NewInt(0)
+	if era.Cmp(big.NewInt(7)) >= 0 {
+		mnr = mnr.Div(wr, big.NewInt(2))
+		statedb.AddBalance(mnbase, mnr)
+	}
 
+	wr = wr.Sub(wr, mnr)
 	statedb.AddBalance(header.Coinbase, wr) // $$w
-	if era.Cmp(big.NewInt(3)) == 1 {
+
+	if era.Cmp(big.NewInt(4)) >= 0 {
 		statedb.AddBalance(d, dr) // $$w
 	}
 
