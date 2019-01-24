@@ -1,6 +1,6 @@
 language: golang
 go:
-- 1.11.4
+- master
 rust:
 - stable
 os:
