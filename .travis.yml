@@ -1,4 +1,4 @@
-language: golang
+language: go
 go:
 - master
 rust:
