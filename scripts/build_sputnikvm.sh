@@ -45,6 +45,6 @@ case $OS in
 		;;
 esac
 
-rm -r $root_path/sputnikvm-ffi
+rm -rf $root_path/sputnikvm-ffi
 
 echo "Save to $root_path/bin/ngind"
