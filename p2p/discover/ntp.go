@@ -64,7 +64,7 @@ func checkClockDrift() {
 	}
 }
 
-func CheckClockDrift(){
+func CheckClockDrift() {
 	checkClockDrift()
 }
 

@@ -143,9 +143,14 @@ func (sol *Solidity) Compile(source string) (map[string]*Contract, error) {
 	} else {
 		params = paramsNew
 		params = append(params, wd)
+		// fix for latest solc
+		tempSrc, _ := ioutil.TempFile("", "src")
+		tempSrc.Write([]byte(source))
+		//params = append(params, "--sol")
+		tempSrcPath := tempSrc.Name()
+		params = append(params, tempSrcPath)
 	}
 	compilerOptions := strings.Join(params, " ")
-
 	cmd := exec.Command(sol.solcPath, params...)
 	cmd.Stdin = strings.NewReader(source)
 	cmd.Stderr = stderr

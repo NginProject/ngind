@@ -19,7 +19,6 @@ package core
 
 import (
 	"fmt"
-	"github.com/NginProject/ngind/masternode"
 	"math/big"
 
 	"github.com/NginProject/ngind/common"
@@ -204,9 +203,7 @@ func GenerateChain(config *ChainConfig, parent *types.Block, db ngindb.Database,
 			gen(i, b)
 		}
 
-		mns := []*masternode.Masternode{}
-
-		AccumulateRewards(config, statedb, h, b.uncles, mns)
+		AccumulateRewards(config, statedb, h, b.uncles)
 		root, err := statedb.CommitTo(db, false)
 		if err != nil {
 			panic(fmt.Sprintf("state write error: %v", err))

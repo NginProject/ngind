@@ -36,3 +36,6 @@ coverage.txt
 accounts/testdata/keystore/accounts.db
 go.sum
 *_test.go
+
+# golang
+vendor

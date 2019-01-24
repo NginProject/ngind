@@ -106,11 +106,6 @@ var (
 		Name:  "atxi.autobuild,atxi.auto-build",
 		Usage: "Begins automatic concurrent indexes building process that runs alongside a normally running ng.",
 	}
-	// Masternode settings
-	MasternodeFlag = cli.BoolFlag{
-		Name:  "masternode",
-		Usage: "Enable masternode",
-	}
 	// Miner settings
 	// CPU mining ONLY
 	MiningEnabledFlag = cli.BoolFlag{
