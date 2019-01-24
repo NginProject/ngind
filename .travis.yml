@@ -1,33 +1,29 @@
-language: generic
+language: golang
 go:
 - 1.11.4
 rust:
 - stable
-
 os:
-  - linux
-  - windows
-
+- linux
 before_install:
-
+- go version
+- openssl aes-256-cbc -K $encrypted_fbb2cade3157_key -iv $encrypted_fbb2cade3157_iv
+  -in keys.gpg.enc -out keys.gpg -d
 
 install:
 - go mod download
 - go mod vendor
-
 script:
 - make
-
 defore_deploy:
 - zip bin
-- mv bin.zip ngind-linux-amd64.zip 
-
+- mv bin.zip ngind-linux-amd64.zip
+- gpg --import keys.gpg
+- gpg -a -d ngind-linux-amd64.zip -o ngind-linux-amd64.zip.asc
 deploy:
   provider: releases
   api_key:
     secure: zZObOUdDjATwkAvP0D50ir6HCHfhjDIo+NHrR2p0ztXxtgxyleolyknlRFlTwfYnFjn1Ja1whU2rxIc71NMWQeCr918fKFNPtHeNEU0epjDILBsKfpFVtHrhY7i/7f0uOhZGxPfGtUmd4CcKBQKhhWh6keix7FR/TMjY0gShjurXc5+GhUcTINWiDKQJpMaF7HodqzhAAoeFY0IVKLdobsD4YOfDlB6r7eL9cXwCBMw8YUovsncfYNPCkdtD8PgX8aXNsRTmSF3Okf+aXJnm9njbhE8X4enhpYhYivyCSBSFo5PGy6Wva05AaGXxzetcOsX3K5zW/zsGfFKd8n+bkQVTQjWyNDSg2D69HU9jxG/pHfuAAfjsDSdBunvf60F/8y16NPl7iAn3K/V4hsxcFUxKFC5FN3czXGX8fWa0ay+4JJQSRfy7Ut6+9pQC/+cFe1bV1SA6XhzP91U8eu5val/oqWf2iHdAreBB+qbKwVVTRsy+qEwa50Q7eGzF+bQe9TsB5MGhR5CEiNeV5OtEqwOh5ZXbxRCBjcSVRGo+1cM6reWRRnk3L9KqfYSlM0BO5nGWdi4KRB6+XvCTfb6ECgCaBCkLrh6taV42vIHSS7L9zPGpStpYAMkbeEjys52RRj8/KsZB1oDi3R9Gu1HLHRMVwRPxAd86EAUdLjCvdU0=
-  file: 
+  file:
   - ngind-linux-amd64.zip
-  # - ngind-linux-amd64.zip.asc
-  on:
-    repo: NginProject/ngind
+  - ngind-linux-amd64.zip.asc
