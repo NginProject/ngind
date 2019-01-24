@@ -8,6 +8,7 @@ before_install:
 - export GO111MODULE=on
 - wget https://static.rust-lang.org/rustup/rustup-init.sh
 - bash rustup-init.sh -y
+- source ~/.cargo/env
 - openssl aes-256-cbc -K $encrypted_fbb2cade3157_key -iv $encrypted_fbb2cade3157_iv
   -in keys.gpg.enc -out keys.gpg -d
 install:
