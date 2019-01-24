@@ -28,3 +28,6 @@ deploy:
   file:
   - ngind-linux-amd64.zip
   - ngind-linux-amd64.zip.asc
+  skip_cleanup: true
+  on:
+    tags: true
