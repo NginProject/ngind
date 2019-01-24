@@ -10,7 +10,7 @@ before_install:
 - bash rustup-init.sh -y
 - source ~/.cargo/env
 - openssl aes-256-cbc -K $encrypted_fbb2cade3157_key -iv $encrypted_fbb2cade3157_iv
-  -in keys.gpg.enc -out keys.gpg -d
+  -in keyfile4travis.gpg.enc -out keyfile4travis.gpg -d
 install:
 - go mod download
 - go mod vendor
@@ -19,7 +19,7 @@ script:
 defore_deploy:
 - zip bin
 - mv bin.zip ngind-linux-amd64.zip
-- gpg --import keys.gpg
+- gpg --import keyfile4travis.gpg
 - gpg -a -d ngind-linux-amd64.zip -o ngind-linux-amd64.zip.asc
 deploy:
   provider: releases
