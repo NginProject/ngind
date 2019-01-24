@@ -57,9 +57,8 @@ func (n BlockNonce) MarshalJSON() ([]byte, error) {
 }
 
 type Header struct {
-	ParentHash common.Hash // Hash to the previous block
-	UncleHash  common.Hash // Uncles of this block
-	// MasterNodeHash common.Hash // MNs of this block // TODO：MN_Updates
+	ParentHash  common.Hash    // Hash to the previous block
+	UncleHash   common.Hash    // Uncles of this block
 	Coinbase    common.Address // The coin base address
 	Root        common.Hash    // Block Trie state
 	TxHash      common.Hash    // Tx sha
@@ -82,7 +81,6 @@ func (h *Header) HashNoNonce() common.Hash {
 	return rlpHash([]interface{}{
 		h.ParentHash,
 		h.UncleHash,
-		// h.MasterNodeHash,
 		h.Coinbase,
 		h.Root,
 		h.TxHash,
@@ -139,13 +137,11 @@ func HeaderToBytes(header *Header) []byte {
 type Body struct {
 	Transactions []*Transaction
 	Uncles       []*Header
-	// MasterNodes []*common.Address
 }
 
 type Block struct {
-	header *Header
-	uncles []*Header
-	// masterNodes []*common.Address
+	header       *Header
+	uncles       []*Header
 	transactions Transactions
 
 	// caches

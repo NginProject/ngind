@@ -3,7 +3,7 @@ module github.com/NginProject/ngind
 require (
 	github.com/NginProject/M00N v0.0.0-20181108184447-9a3eac40300a
 	github.com/NginProject/sputnikvm-ffi v0.0.0-20180910131407-7b0cdf94d93f
-	github.com/StackExchange/wmi v0.0.0-20180725035823-b12b22c5341f
+	github.com/StackExchange/wmi v0.0.0-20180725035823-b12b22c5341f // indirect
 	github.com/boltdb/bolt v1.3.1
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/denisbrodbeck/machineid v1.0.0
@@ -25,6 +25,7 @@ require (
 	github.com/robertkrimen/otto v0.0.0-20180617131154-15f95af6e78d
 	github.com/rs/cors v1.6.0
 	github.com/spf13/afero v1.1.2
+	github.com/stamblerre/gocode v0.0.0-20181212030458-2f9d39d8f31d // indirect
 	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/syndtr/goleveldb v0.0.0-20181105012736-f9080354173f
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793

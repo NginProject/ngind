@@ -128,7 +128,6 @@ func makeCLIApp() (app *cli.App) {
 		MaxPendingPeersFlag,
 		CoinbaseFlag,
 		GasPriceFlag,
-		MasternodeFlag,
 		MinerThreadsFlag,
 		MiningEnabledFlag,
 		TargetGasLimitFlag,
