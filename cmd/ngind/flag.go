@@ -337,19 +337,12 @@ func MakeRPCModules(ctx *cli.Context, input string) []string {
 		result[i] = strings.TrimSpace(r)
 	}
 
-	if ctx.GlobalIsSet(MasternodeFlag.Name) {
-		return append(result, "net")
-	} else {
-		return result
-	}
+	return result
 }
 
 // MakeHTTPRpcHost creates the HTTP RPC listener interface string from the set
 // command line flags, returning empty if the HTTP endpoint is disabled.
 func MakeHTTPRpcHost(ctx *cli.Context) string {
-	if ctx.GlobalIsSet(MasternodeFlag.Name) {
-		return "0.0.0.0"
-	}
 	if !ctx.GlobalBool(aliasableName(RPCEnabledFlag.Name, ctx)) {
 		return ""
 	}

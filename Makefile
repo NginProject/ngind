@@ -64,7 +64,10 @@ else
 endif
 
 fmt: ## gofmt and goimports all go files
-	find . -name '*.go' -not -wholename './vendor/*' -not -wholename './_vendor*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
+	go get golang.org/x/tools/imports
+	curl -L https://git.io/vp6lP | sh
+	find . -name '*.go' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; gometalinter -w "$$file"; done
+	go mod tidy
 
 chainconfig: core/assets/assets.go ## Rebuild assets if source config files changed.
 
@@ -78,6 +81,7 @@ clean: ## Remove local snapshot binary directory
 	if [ -d ${BINARY} ] ; then rm -rf ${BINARY} ; fi
 	if [ -d "sputnikvm-ffi" ] ; then rm -rf "sputnikvm-ffi" ; fi
 	go clean -i ./...
+	go mod tidy
 
 # Absolutely awesome: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:

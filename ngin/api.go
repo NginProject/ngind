@@ -930,7 +930,7 @@ func newRPCTransactionFromBlockIndex(b *types.Block, txIndex int) (*RPCTransacti
 		from, _ := types.Sender(signer, tx)
 
 		v, r, s := tx.RawSignatureValues()
-		
+
 		return &RPCTransaction{
 			BlockHash:        b.Hash(),
 			BlockNumber:      rpc.NewHexNumber(b.Number()),

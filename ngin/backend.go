@@ -293,6 +293,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Ngin, error) {
 	if ngin.protocolManager, err = NewProtocolManager(ngin.chainConfig, m, uint64(config.NetworkId), ngin.eventMux, ngin.txPool, ngin.pow, ngin.blockchain, chainDb); err != nil {
 		return nil, err
 	}
+
 	ngin.miner = miner.New(ngin, ngin.chainConfig, ngin.EventMux(), ngin.pow)
 	if err = ngin.miner.SetGasPrice(config.GasPrice); err != nil {
 		return nil, err
